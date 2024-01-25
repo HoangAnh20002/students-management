@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('results', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id',);
+            $table->unsignedInteger('student_id',);
             $table->unsignedInteger('course_id',);
             $table->float('mark');
             $table->timestamps();

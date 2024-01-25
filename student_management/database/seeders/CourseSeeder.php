@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Course;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -12,6 +13,11 @@ class CourseSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        $Courses = ['Toán', 'Văn ', 'Tiếng Anh', 'Thể dục'];
+        foreach ($Courses as $value) {
+            Course::create([
+                'name' => $value,
+            ]);
+        }
     }
 }
