@@ -9,15 +9,15 @@ class Course extends Model
 {
     use HasFactory;
     protected $fillable = ['name'];
-    public function Student(){
-        return $this->belongsToMany(Student::class,'Student_Course','Course_id','Student_id');
+    public function student(){
+        return $this->belongsToMany(Student::class,'student_course','course_id','student_id');
 
     }
-    public function Result(){
+    public function result(){
         return $this->hasOne(Result::class);
     }
-    public function Department(){
-        return $this->belongsToMany(Department::class,'Department_Course','course_id','department_id');
+    public function department(){
+        return $this->belongsToMany(Department::class,'department_course','course_id','department_id');
     }
 
 }

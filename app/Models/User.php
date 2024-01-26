@@ -10,7 +10,7 @@ class User extends Model
     use HasFactory;
     protected $fillable = ['name','full_name','password'];
 
-    public function Student(){
+    public function student(){
         return $this->hasMany(Student::class);
     }
 

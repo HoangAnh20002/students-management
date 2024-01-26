@@ -9,7 +9,7 @@ class Result extends Model
 {
     use HasFactory;
     protected $fillable = ['student_id','course_id','mark'];
-    public function Course(){
+    public function course(){
         return $this->belongsTo(Course::class);
     }
 }

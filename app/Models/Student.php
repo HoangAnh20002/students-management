@@ -11,10 +11,10 @@ class Student extends Model
     use HasFactory;
     protected $fillable = ['user_id','department_id','student_code','email','birth_date'];
 
-    public function User(){
+    public function user(){
         return $this->belongsTo(User::class);
     }
-    public function Course(){
-        return $this->belongsToMany(Course::class,'Student_Course','student_id','course_id');
+    public function course(){
+        return $this->belongsToMany(Course::class,'student_course','student_id','course_id');
     }
 }

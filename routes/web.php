@@ -16,3 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::group(['middleware' => 'checkUserRole'], function () {
+    // Các route cho admin hoặc sinh viên ở đây
+    Route::get('/admin/dashboard', 'AdminController@dashboard')->name('admin.dashboard');
+    Route::get('/student/dashboard', 'StudentController@dashboard')->name('student.dashboard');
+});
