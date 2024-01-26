@@ -1,9 +1,8 @@
 <?php
 namespace App\Repositories\Interfaces;
 
-interface StudentRepositoryInterface
+interface StudentRepositoryInterface extends BaseRepositoryInterface
 {
-    public function getAllStudent();
-    public function getStudentById($id);
+
 }
 

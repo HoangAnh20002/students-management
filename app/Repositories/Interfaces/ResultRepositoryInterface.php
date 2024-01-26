@@ -1,9 +1,7 @@
 <?php
 namespace App\Repositories\Interfaces;
 
-interface ResultRepositoryInterface
+interface ResultRepositoryInterface extends BaseRepositoryInterface
 {
-    public function getAllResult();
-    public function getResultById($id);
 
 }

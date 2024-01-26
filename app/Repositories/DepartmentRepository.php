@@ -1,16 +1,12 @@
 <?php
 namespace App\Repositories;
 use App\Repositories\Interfaces\DepartmentRepositoryInterface;
-use App\Models\Student;
+use Illuminate\Database\Eloquent\Model;
 
-class DepartmentRepository implements DepartmentRepositoryInterface
+class DepartmentRepository extends BaseRepository implements DepartmentRepositoryInterface
 {
-    public function getAllDepartment()
-    {
-        return Student::all();
-    }
-    public function getDepartmentById($id)
-    {
-        return Student::find($id);
-    }
+   public function __construct(Model $model)
+   {
+       parent::__construct($model);
+   }
 }

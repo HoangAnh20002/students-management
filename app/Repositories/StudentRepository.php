@@ -2,15 +2,12 @@
 namespace App\Repositories;
 use App\Repositories\Interfaces\StudentRepositoryInterface;
 use App\Models\Student;
+use Illuminate\Database\Eloquent\Model;
 
-class StudentRepository implements StudentRepositoryInterface
+class StudentRepository extends BaseRepository implements StudentRepositoryInterface
 {
-    public function getAllStudent()
+    public function __construct(Model $model)
     {
-        return Student::all();
-    }
-    public function getStudentById($id)
-    {
-        return Student::find($id);
+        parent::__construct($model);
     }
 }

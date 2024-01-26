@@ -1,16 +1,14 @@
 <?php
-namespace App\Repositories;
-use App\Models\Student;
-use App\Repositories\Interfaces\CourseRepositoryInterface;
 
-class CourseRepository implements CourseRepositoryInterface
+namespace App\Repositories;
+
+use App\Repositories\Interfaces\CourseRepositoryInterface;
+use App\Models\Course;
+
+class CourseRepository extends BaseRepository implements CourseRepositoryInterface
 {
-    public function getAllCourse()
+    public function __construct(Course $model)
     {
-        return Student::all();
-    }
-    public function getCourseById($id)
-    {
-        return Student::find($id);
+        parent::__construct($model);
     }
 }

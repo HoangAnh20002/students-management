@@ -1,9 +1,7 @@
 <?php
 namespace App\Repositories\Interfaces;
 
-interface UserRepositoryInterface
+interface UserRepositoryInterface extends BaseRepositoryInterface
 {
-    public function getAll();
-    public function getUserById($id);
 
 }

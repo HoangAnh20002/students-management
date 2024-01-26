@@ -1,9 +1,8 @@
 <?php
 namespace App\Repositories\Interfaces;
 
-interface DepartmentRepositoryInterface
+interface DepartmentRepositoryInterface extends BaseRepositoryInterface
 {
-    public function getAllDepartment();
-    public function getDepartmentById($id);
+
 
 }
