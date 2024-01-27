@@ -7,8 +7,11 @@ use App\Models\Course;
 
 class CourseRepository extends BaseRepository implements CourseRepositoryInterface
 {
-    public function __construct(Course $model)
+    public function __construct()
     {
-        parent::__construct($model);
+        parent::__construct();
+    }
+    public function getModel(){
+      return $this->model = app()->make(Course::class);
     }
 }

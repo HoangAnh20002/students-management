@@ -1,18 +1,19 @@
 <?php
 
 namespace App\Repositories;
-use App\Repositories\Interfaces\RepositoryInterface;
-use Faker\Provider\Base;
+use App\Repositories\Interfaces\BaseRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
-use function PHPUnit\Framework\returnValueMap;
 
-class BaseRepository implements BaseRepositoryInterface
+
+abstract class BaseRepository implements BaseRepositoryInterface
 {
-    protected $model;
-
-    public function __construct(Model $model)
+    public function __construct()
     {
-        $this->model = $model;
+        $this->setModel();
+    }
+    abstract protected function getModel();
+    protected function setModel(){
+        $this->model = $this->getModel();
     }
     public function all(){
         return $this->model->all();
