@@ -10,5 +10,8 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
   {
       parent::__construct($model);
   }
-
+  public function getModel()
+  {
+      return $this->model = app()->make(User::class);
+  }
 }

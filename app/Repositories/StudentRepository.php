@@ -10,4 +10,8 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
     {
         parent::__construct($model);
     }
+    public function getModel()
+    {
+        return $this->model = app()->make(Student::class);
+    }
 }
