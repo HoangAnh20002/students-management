@@ -23,5 +23,11 @@ class UserSeeder extends Seeder
                 "full_name" => $faker->name . "nguyen",
             ]);
         }
+        User::create([
+            'name' => 'anh',
+            'password' => Hash::make('123123'),
+            'full_name' => 'nguyen anh',
+        ]);
+
     }
 }

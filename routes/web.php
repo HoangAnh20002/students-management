@@ -17,7 +17,11 @@ Route::get('/', [\App\Http\Controllers\CourseController::class, 'index']);
 
 
 Route::group(['middleware' => 'checkUserRole'], function () {
-    // Các route cho admin hoặc sinh viên ở đây
-    Route::get('/admin/dashboard', 'AdminController@dashboard')->name('admin.dashboard');
-    Route::get('/student/dashboard', 'StudentController@dashboard')->name('student.dashboard');
+    Route::get('/AdminMain', function () {
+        return view('AdminMain');
+    })->name('AdminMain');
+    Route::get('/StudentMain', [\App\Http\Controllers\StudentController::class, 'index'])->name('StudentMain');
 });
+
+Route::get('/login', [\App\Http\Controllers\LoginController::class,'showLoginForm'])->name('login');
+Route::post('/login', [\App\Http\Controllers\LoginController::class,'login']);

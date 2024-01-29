@@ -17,7 +17,6 @@ class CourseController extends Controller
 
     public function index()
     {
-        // Lấy danh sách các khóa học
         $courses = $this->courseRepositoryInterface->all();
 
         return view('welcome', compact('courses'));

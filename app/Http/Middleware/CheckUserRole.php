@@ -2,9 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Repositories\Interfaces\StudentRepositoryInterface;
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 
 class CheckUserRole
@@ -14,15 +14,27 @@ class CheckUserRole
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+
+
+// ...
+    protected $studentRepositoryInterface;
+
+    public function __construct(StudentRepositoryInterface $studentRepositoryInterface)
     {
-        $user = Auth::user();
-        if($user){
-            if($user->student){
-                return redirect()->route('student.dashboard');
+        $this->studentRepositoryInterface = $studentRepositoryInterface;
+    }
+
+    public function handle($request, Closure $next)
+    {
+        $userIds = $this->studentRepositoryInterface->all()->pluck('user_id')->toArray();
+        if (Auth::check()) {
+            $userId = Auth::id();
+            if (!empty($userIds) && in_array($userId, $userIds)) {
+                return redirect()->route('StudentMain');
+            } else {
+                return redirect()->route('AdminMain');
             }
-            return redirect()->route('admin.dashboard');
         }
-        return $next($request);
+        return redirect()->route('login');
     }
 }

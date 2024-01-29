@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class StudentRepository extends BaseRepository implements StudentRepositoryInterface
 {
-    public function __construct(Model $model)
+    public function __construct()
     {
-        parent::__construct($model);
+        parent::__construct();
     }
     public function getModel()
     {
