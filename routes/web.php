@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AdminCheck;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,12 +16,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [\App\Http\Controllers\CourseController::class, 'index']);
 
+Route::group(['middleware' => 'adminCheck'], function () {
+    Route::get('/adminMain', function () {
+        return view('adminMain');
+    })->name('adminMain');
+});
 
-Route::group(['middleware' => 'checkUserRole'], function () {
-    Route::get('/AdminMain', function () {
-        return view('AdminMain');
-    })->name('AdminMain');
-    Route::get('/StudentMain', [\App\Http\Controllers\StudentController::class, 'index'])->name('StudentMain');
+Route::group(['middleware' => 'studentCheck'], function () {
+    Route::get('/studentMain', [\App\Http\Controllers\StudentController::class, 'index'])->name('studentMain');
 });
 
 Route::get('/login', [\App\Http\Controllers\LoginController::class,'showLoginForm'])->name('login');

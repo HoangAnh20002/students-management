@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\StudentCheck;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -15,7 +16,8 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware = [
         // ...
-        'checkUserRole' => \App\Http\Middleware\CheckUserRole::class,
+        'adminCheck' => \App\Http\Middleware\adminCheck::class,
+        'studentCheck'=>\App\Http\Middleware\studentCheck::class,
     ];
 
     protected $middleware = [

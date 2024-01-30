@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Course;
-use App\Repositories\Interfaces\CourseRepositoryInterface;
-use Illuminate\Http\Request;
+use App\Repositories\CourseRepository;
+use App\Repositories\DepartmentRepository;
 
 class CourseController extends Controller
 {
-    protected $courseRepositoryInterface;
+    protected $courseRepository;
+    protected $departmentRepository;
 
-    public function __construct(CourseRepositoryInterface $courseRepositoryInterface)
+    public function __construct(CourseRepository $courseRepository,
+                                DepartmentRepository $departmentRepository)
     {
-        $this->courseRepositoryInterface = $courseRepositoryInterface;
+        $this->courseRepository = $courseRepository;
+        $this->departmentRepository = $departmentRepository;
     }
 
     public function index()
     {
-        $courses = $this->courseRepositoryInterface->all();
+        $courses = $this->courseRepository->all();
 
         return view('welcome', compact('courses'));
     }

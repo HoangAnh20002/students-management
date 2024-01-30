@@ -1,15 +1,16 @@
 <?php
 namespace App\Http\Controllers;
-use App\Repositories\Interfaces\AuthRepositoryInterface;
+use App\Repositories\AuthRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    protected $authRepositoryInterface;
+    protected $authRepository;
 
-    public function __construct(AuthRepositoryInterface $authRepositoryInterface)
+    public function __construct(AuthRepository $authRepository)
     {
-        $this->authRepositoryInterface = $authRepositoryInterface;
+        $this->authRepository = $authRepository;
     }
 
     public function showLoginForm()
@@ -20,8 +21,11 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('name', 'password');
-        if ($this->authRepositoryInterface->authenticate($credentials)) {
-            return redirect()->intended();
+        if ($this->authRepository->authenticate($credentials)) {
+            if(Auth::user()->role == 1){
+                return redirect('adminMain');
+            }
+            return redirect('studentMain');
         }
         return redirect()->back()->withInput()->withErrors([
             'name' => 'Lỗi đăng nhập.',
