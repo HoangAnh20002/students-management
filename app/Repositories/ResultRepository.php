@@ -2,14 +2,12 @@
 namespace App\Repositories;
 use App\Models\Department;
 use App\Repositories\Interfaces\ResultRepositoryInterface;
-use App\Models\Student;
-use Illuminate\Database\Eloquent\Model;
 
 class ResultRepository extends BaseRepository implements ResultRepositoryInterface
 {
-    public function __construct(Model $model)
+    public function __construct()
     {
-        parent::__construct($model);
+        parent::__construct();
     }
     public function getModel()
     {

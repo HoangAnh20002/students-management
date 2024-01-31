@@ -2,7 +2,6 @@
 namespace App\Repositories;
 use App\Repositories\Interfaces\StudentRepositoryInterface;
 use App\Models\Student;
-use Illuminate\Database\Eloquent\Model;
 
 class StudentRepository extends BaseRepository implements StudentRepositoryInterface
 {

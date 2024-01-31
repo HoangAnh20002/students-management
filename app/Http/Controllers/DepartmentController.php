@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Repositories\DepartmentRepository;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
@@ -10,9 +11,14 @@ class DepartmentController extends Controller
     /**
      * Display a listing of the resource.
      */
+    protected $departmentRepository;
+    public function __construct(DepartmentRepository $departmentRepository){
+        $this->departmentRepository = $departmentRepository;
+    }
     public function index()
     {
-        //
+        $departments = $this->departmentRepository->all();
+        return view('department.index',compact('departments'));
     }
 
     /**

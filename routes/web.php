@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Middleware\AdminCheck;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,3 +27,5 @@ Route::group(['middleware' => 'studentCheck'], function () {
 
 Route::get('/login', [\App\Http\Controllers\LoginController::class,'showLoginForm'])->name('login');
 Route::post('/login', [\App\Http\Controllers\LoginController::class,'login']);
+
+Route::resource('/department',\App\Http\Controllers\DepartmentController::class);

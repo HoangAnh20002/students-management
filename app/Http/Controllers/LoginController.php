@@ -28,7 +28,7 @@ class LoginController extends Controller
             return redirect('studentMain');
         }
         return redirect()->back()->withInput()->withErrors([
-            'name' => 'Lỗi đăng nhập.',
+            'name' => 'Error input',
         ]);
     }
 
