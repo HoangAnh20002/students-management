@@ -26,7 +26,7 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        //
+        return view('department.create');
     }
 
     /**
@@ -34,7 +34,16 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+        $departmentData = [
+            'name' => $request->input('name'),
+        ];
+
+        $this->departmentRepository->create($departmentData);
+
+        return redirect('department')->with('success', 'Department added successfully');
     }
 
     /**
@@ -50,22 +59,45 @@ class DepartmentController extends Controller
      */
     public function edit(Department $department)
     {
-        //
+        return view('department.edit',compact('department'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Department $department)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+        $department = $this->departmentRepository->find($id);
+
+        if (!$department) {
+            return redirect()->back()->with('error', 'Department not found');
+        }
+
+        $departmentData = [
+            'name' => $request->input('name'),
+        ];
+
+        $this->departmentRepository->update($id, $departmentData);
+
+        return redirect('department')->with('success', 'Department updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Department $department)
+    public function destroy($id)
     {
-        //
+        $department = $this->departmentRepository->find($id);
+
+        if (!$department) {
+            return redirect()->back()->with('error', 'Department not found');
+        }
+
+        $this->departmentRepository->delete($id);
+
+        return redirect()->route('department.index')->with('success', 'Department deleted successfully');
     }
 }
