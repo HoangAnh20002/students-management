@@ -1,44 +1,29 @@
 
 # Student management
+after clone project,perform the flowing steps
 
-Trang web để quản lí sinh viên
+- install composer and setup composer
++ "https://getcomposer.org/Composer-Setup.exe"
++open the Composer-Setup.exe file you downloaded
++in installer interface,proceed by clicking the buttons to accept the terms and choose the default installation options
++ check if composer has been successfully installed "composer --verson"
 
-## Cài Đặt
+- install xampp and setup xampp
++"https://www.apachefriends.org/download.html"
++ run xampp after downloaded
++ start Apache and MySQL: after installation, start both Apache and MySQL services using the XAMPP Control Panel.
 
-Hướng dẫn cài đặt và chạy dự án.
+-install library you need with composer
++ open terminal,cd in project folder, then run command: " composer install "
 
-1. Clone repository:
-
-    git clone https://github.com/HoangAnh20002/students-management.git
-
-2. Di chuyển vào thư mục dự án:
-
-    cd student_management
-
-3. Cài đặt các dependencies:
-
-    composer
-    xampp
-
-4. Sao chép tệp `.env` và cấu hình cơ sở dữ liệu:
-
-    cp .env.example .env
-
-    Cập nhật thông tin cấu hình trong tệp `.env`.
-    đổi tên cơ sở dữ liệu là students_management
-
-5. Chạy migrations và seed:
-
-    php artisan migrate
-    php artisan db:seed
-
-6. Chạy dự án:
-
-    php artisan serve
-
-Truy cập [http://localhost:8000](http://localhost:8000) trong trình duyệt để xem dự án của bạn.
-
-## Sử Dụng
+-copy file .env. example ,rename to .env, then config accordingly DB_CONNECTION=mysql
+                                                                  DB_HOST=127.0.0.1
+                                                                  DB_PORT=3306
+                                                                  DB_DATABASE=students_management
+                                                                  DB_USERNAME=root
+                                                                  DB_PASSWORD=
 
 
-..........
+- run "php artisan migrate" to create table
+- run "php artisan db:seed" to create fake data
+- run "php artisan serve" to run serve

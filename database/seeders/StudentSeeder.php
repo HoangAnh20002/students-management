@@ -24,6 +24,7 @@ class StudentSeeder extends Seeder
                 "name" => $faker->userName,
                 "password" => Hash::make('12345678'),
                 "full_name" => $faker->name . "nguyen",
+                'role' => '0',
             ]);
 
             // Chọn một khoa ngẫu nhiên
