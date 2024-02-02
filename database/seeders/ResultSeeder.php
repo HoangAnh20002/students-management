@@ -17,13 +17,10 @@ class ResultSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        // Lặp để tạo dữ liệu giả mạo cho bảng results
         for ($i = 0; $i < 100; $i++) {
-            // Chọn một người dùng và khóa học ngẫu nhiên
             $student = Student::inRandomOrder()->first();
             $course = Course::inRandomOrder()->first();
 
-            // Tạo kết quả với thông tin giả mạo
             Result::create([
                 'student_id' => $student->id,
                 'course_id' => $course->id,
