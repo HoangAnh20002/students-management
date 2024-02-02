@@ -32,4 +32,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
     {
         return $this->model->destroy($id);
     }
+    public function paginate($page){
+        return $this->model->paginate($page);
+    }
 }

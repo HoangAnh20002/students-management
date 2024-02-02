@@ -1,39 +1,32 @@
-
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
-    <title>Department</title>
-</head>
-
-<body>
-@include('layouts.header')
-@extends('layouts.footer')
+@extends('layouts.home')
+@section('content')
 @if(session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
     </div>
 @endif
-
+@if(session(('error')))
+    <div class="alert alert-danger">
+        {{session('error')}}
+    </div>
+@endif
 <form method="GET" action="{{ route('department.create') }}">
     <div class="d-flex justify-content-around">
-        <h2 class="ml-5 mt-5">Department List</h2>
+        <h2 class="ml-5 mt-3">Department List</h2>
+        @if($role === 1)
         <div>
             <button class="m-5 w-75 h-25 bg-primary text-white border-primary" type="submit">Create</button>
         </div>
+        @endif
     </div>
 </form>
 
-<table class="table m-5 border" style="width: 90%">
+<table class="table ml-5 mt-3 border" style="width: 100%">
     <thead>
     <tr>
         <th scope="col">#</th>
         <th scope="col">Name</th>
-        <th scope="col">Action</th>
+        @if($role === 1) <th scope="col">Action</th>@endif
     </tr>
     </thead>
     <tbody>
@@ -41,27 +34,31 @@
         <tr>
             <th scope="row">{{$department->id}}</th>
             <td>{{$department->name}}</td>
-            <td>
+           @if($role === 1) <td>
                 <div class="d-flex">
                     <a href="{{ route('department.edit', ['department' => $department->id]) }}">
                         <button class="bg-success text-white">Edit</button>
                     </a>
-                    <button type="button" class="ml-2 bg-danger text-white " data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <button type="button" class="ml-2 bg-danger text-white" data-bs-toggle="modal" data-bs-target="#exampleModal{{ $department->id }}">
                         Delete
                     </button>
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="exampleModal{{ $department->id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ $department->id }}" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Delete </h1>
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel{{ $department->id }}">Delete {{ $department->name }}</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    Are you sure?
+                                    Are you sure you want to delete {{ $department->name }}?
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <a href="{{route('department.destroy',['department' => $department->id])}}"><button type="button" class="btn btn-primary">Delete</button></a>
+                                    <form action="{{ route('department.destroy', ['department' => $department->id]) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -69,13 +66,13 @@
 
                 </div>
             </td>
+            @endif
         </tr>
     @endforeach
     </tbody>
 </table>
+<div style="margin-bottom: 22px">
+    {{ $departments->links('vendor.pagination.bootstrap-5') }}
+</div>
 
-</body>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-</html>
+@endsection

@@ -30,6 +30,11 @@ class LoginController extends Controller
         return redirect()->back()->withInput()->withErrors([
             'name' => 'Error input',
         ]);
+
+    }
+    public function logout(){
+        Auth::logout();
+        return redirect('login');
     }
 
 }

@@ -16,9 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [\App\Http\Controllers\CourseController::class, 'index']);
 
 Route::group(['middleware' => 'adminCheck'], function () {
-    Route::get('/adminMain', function () {
-        return view('adminMain');
-    })->name('adminMain');
+    Route::get('/adminMain',[\App\Http\Controllers\UserController::class,'index'])->name('adminMain');
 });
 
 Route::group(['middleware' => 'studentCheck'], function () {
@@ -27,5 +25,6 @@ Route::group(['middleware' => 'studentCheck'], function () {
 
 Route::get('/login', [\App\Http\Controllers\LoginController::class,'showLoginForm'])->name('login');
 Route::post('/login', [\App\Http\Controllers\LoginController::class,'login']);
+Route::get('/logout',[\App\Http\Controllers\LoginController::class,'logout'])->name('logout');
 
 Route::resource('/department',\App\Http\Controllers\DepartmentController::class);

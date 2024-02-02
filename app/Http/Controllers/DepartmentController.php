@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Department;
 use App\Repositories\DepartmentRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DepartmentController extends Controller
 {
@@ -12,13 +13,16 @@ class DepartmentController extends Controller
      * Display a listing of the resource.
      */
     protected $departmentRepository;
-    public function __construct(DepartmentRepository $departmentRepository){
+
+    public function __construct(DepartmentRepository $departmentRepository,){
         $this->departmentRepository = $departmentRepository;
     }
     public function index()
     {
-        $departments = $this->departmentRepository->all();
-        return view('department.index',compact('departments'));
+        $page = 5;
+        $role = Auth::user()->role;
+        $departments = $this->departmentRepository->paginate($page);
+        return view('department.index',compact('departments','role'));
     }
 
     /**
@@ -26,7 +30,11 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        return view('department.create');
+        $role = Auth::user()->role;
+        if ($role === 0) {
+            return redirect('login')->with('error', 'Permission denied. Please log in with a valid account.');
+        }
+        return view('department.create', compact('role'));
     }
 
     /**
@@ -59,7 +67,11 @@ class DepartmentController extends Controller
      */
     public function edit(Department $department)
     {
-        return view('department.edit',compact('department'));
+        $role = Auth::user()->role;
+        if ($role === 0) {
+            return redirect('login')->with('error', 'Permission denied. Please log in with a valid account.');
+        }
+        return view('department.edit',compact('department','role'));
     }
 
     /**
@@ -71,9 +83,8 @@ class DepartmentController extends Controller
             'name' => 'required|string|max:255',
         ]);
         $department = $this->departmentRepository->find($id);
-
         if (!$department) {
-            return redirect()->back()->with('error', 'Department not found');
+            return redirect('department')->with('error', 'Department not found');
         }
 
         $departmentData = [
@@ -93,11 +104,11 @@ class DepartmentController extends Controller
         $department = $this->departmentRepository->find($id);
 
         if (!$department) {
-            return redirect()->back()->with('error', 'Department not found');
+            return redirect('department')->with('error', 'Department not found');
         }
 
         $this->departmentRepository->delete($id);
 
-        return redirect()->route('department.index')->with('success', 'Department deleted successfully');
+        return redirect('department')->with('success', 'Department deleted successfully');
     }
 }

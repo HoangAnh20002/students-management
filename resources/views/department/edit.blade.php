@@ -1,30 +1,25 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-@include('layouts.header')
-@extends('layouts.footer')
-    <div class="container">
-        <h2>Edit Department</h2>
-        <form action="{{ route('department.update', $department->id) }}" method="post">
-            @csrf
-            @method('put')
-            <label for="name">Department Name:</label>
-            <input type="text" name="name" value="{{ $department->name }}" required>
+@extends('layouts.home')
+@section('content')
+    <div class="container " style="margin-bottom: 315px" >
+        <h2 class="mt-5">Edit Department</h2>
+        <div class="mt-3">
+            <form action="{{ route('department.update', $department->id) }}" method="post">
+                @csrf
+                @method('put')
+                <label for="name">Department Name:</label>
+                <input type="text" name="name" value="{{ $department->name }}" required>
+                <br/>
+                <button class="btn btn-primary mt-3" type="submit">Update Department</button>
+            </form>
+            <form action="{{route('department.destroy',$department->id)}}" method="post">
+                @csrf
+                @method('DELETE')
+                <button class="btn btn-danger mt-3">
+                    Delete Department
+                </button>
+            </form>
+        </div>
 
-            <button type="submit">Update Department</button>
-        </form>
     </div>
-
-
-
-</body>
-</html>
-
+@endsection
 
