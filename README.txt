@@ -17,10 +17,10 @@ after clone project,perform the flowing steps
 + open terminal,cd in project folder, then run command: " composer install "
 
 -copy file .env. example ,rename to .env, then config accordingly DB_CONNECTION=mysql
-                                                                  DB_HOST=127.0.0.1
-                                                                  DB_PORT=3306
-                                                                  DB_DATABASE=students_management
-                                                                  DB_USERNAME=root
+                                                                  DB_HOST=
+                                                                  DB_PORT=
+                                                                  DB_DATABASE=
+                                                                  DB_USERNAME=
                                                                   DB_PASSWORD=
 
 
