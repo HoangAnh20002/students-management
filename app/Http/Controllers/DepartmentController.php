@@ -31,7 +31,7 @@ class DepartmentController extends Controller
     public function create()
     {
         $role = Auth::user()->role;
-        if ($role === 0) {
+        if ($role == '0') {
             return redirect('login')->with('error', 'Permission denied. Please log in with a valid account.');
         }
         return view('department.create', compact('role'));
@@ -68,7 +68,7 @@ class DepartmentController extends Controller
     public function edit(Department $department)
     {
         $role = Auth::user()->role;
-        if ($role === 0) {
+        if ($role == '0') {
             return redirect('login')->with('error', 'Permission denied. Please log in with a valid account.');
         }
         return view('department.edit',compact('department','role'));

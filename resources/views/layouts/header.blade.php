@@ -4,7 +4,7 @@
         </div>
         <div class="col-6 text-white text-right"style="height: 80px">
             <div class="text-right mt-3">
-                @if($role === 1)
+                @if($role == '1')
             <div>
                 Admin
             @else

@@ -13,7 +13,7 @@
 <form method="GET" action="{{ route('department.create') }}">
     <div class="d-flex justify-content-around">
         <h2 class="ml-5 mt-3">Department List</h2>
-        @if($role === 1)
+        @if($role == '1')
         <div>
             <button class="m-5 w-75 h-25 bg-primary text-white border-primary" type="submit">Create</button>
         </div>
@@ -26,7 +26,7 @@
     <tr>
         <th scope="col">#</th>
         <th scope="col">Name</th>
-        @if($role === 1) <th scope="col">Action</th>@endif
+        @if($role == '1') <th scope="col">Action</th>@endif
     </tr>
     </thead>
     <tbody>
@@ -34,7 +34,7 @@
         <tr>
             <th scope="row">{{$department->id}}</th>
             <td>{{$department->name}}</td>
-           @if($role === 1) <td>
+            @if($role == '1') <td>
                 <div class="d-flex">
                     <a href="{{ route('department.edit', ['department' => $department->id]) }}">
                         <button class="bg-success text-white">Edit</button>
