@@ -11,13 +11,30 @@
                 <br/>
                 <button class="btn btn-primary mt-3" type="submit">Update Department</button>
             </form>
-            <form action="{{route('department.destroy',$department->id)}}" method="post">
-                @csrf
-                @method('DELETE')
-                <button class="btn btn-danger mt-3">
-                    Delete Department
-                </button>
-            </form>
+            <button type="button" class="mt-2 bg-danger px-3 py-1 rounded text-white" data-bs-toggle="modal" data-bs-target="#exampleModal{{ $department->id }}">
+                Delete
+            </button>
+            <div class="modal fade" id="exampleModal{{ $department->id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ $department->id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel{{ $department->id }}">Delete {{ $department->name }}</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete {{ $department->name }}?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <form action="{{ route('department.destroy', ['department' => $department->id]) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
