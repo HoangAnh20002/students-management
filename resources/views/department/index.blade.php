@@ -10,19 +10,19 @@
         {{session('error')}}
     </div>
 @endif
-<div style="margin-left:150px;">
+
 <form method="GET" action="{{ route('department.create') }}">
-    <div class="d-flex justify-content-around">
-        <h2 class="ml-5 mt-3">Department List</h2>
+    <div class="d-flex mt-3 justify-content-around">
+        <h2 class="">Department List</h2>
         @if($role == '1')
         <div>
-            <button class="m-5 w-75 h-25 bg-primary text-white border-primary" type="submit">Create</button>
+            <button class="bg-primary text-white btn" type="submit">Create</button>
         </div>
         @endif
     </div>
 </form>
 
-<table class="table ml-5 mt-3 border" style="width: 100%">
+<table class="table ml-5 mt-3 shadow border" style="width: 100%">
     <thead>
     <tr>
         <th scope="col">#</th>
@@ -38,20 +38,20 @@
             @if($role == '1') <td>
                 <div class="d-flex">
                     <a href="{{ route('department.edit', ['department' => $department->id]) }}">
-                        <button class="bg-success text-white">Edit</button>
+                        <button class="bg-success text-white btn">Edit</button>
                     </a>
-                    <button type="button" class="ml-2 bg-danger text-white" data-bs-toggle="modal" data-bs-target="#exampleModal{{ $department->id }}">
+                    <button type="button" class="ml-2 bg-danger text-white btn" data-bs-toggle="modal" data-bs-target="#exampleModal{{ $department->id }}">
                         Delete
                     </button>
                     <div class="modal fade" id="exampleModal{{ $department->id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ $department->id }}" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel{{ $department->id }}">Delete {{ $department->name }}</h1>
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel{{ $department->id }}">Delete Confirm</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    Are you sure you want to delete {{ $department->name }}?
+                                    Are you sure you want to delete ?
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -75,5 +75,5 @@
 <div style="margin-bottom: 22px">
     {{ $departments->links('vendor.pagination.bootstrap-5') }}
 </div>
-</div>
+
 @endsection

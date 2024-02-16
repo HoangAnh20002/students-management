@@ -8,9 +8,10 @@
              @csrf
              <label for="name">Name:</label>
              <input type="text" name="name" id="name" required><br/>
-             <button class="ml-5 mt-3 px-3 bg-primary text-white" type="submit">Submit</button>
-         </form>
+             <button class="ml-5 mt-3 px-3 bg-primary text-white btn" type="submit">Submit</button>
+         </form><button class="btn btn-secondary " onclick="history.back()">Cancel</button>
      </div>
+
  </div>
 @endsection
 

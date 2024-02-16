@@ -19,7 +19,7 @@ class DepartmentController extends Controller
     }
     public function index()
     {
-        $page = 5;
+        $page = 10;
         $role = Auth::user()->role;
         $departments = $this->departmentRepository->paginate($page);
         return view('department.index',compact('departments','role'));

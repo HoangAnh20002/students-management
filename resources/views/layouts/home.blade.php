@@ -8,12 +8,13 @@
     <title>Document</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 @include('layouts.header')
-<div class="d-flex">
-    <div>@include('layouts.sidebar')</div>
-    <div class="ml-5" style="min-height: 550px">@yield('content')</div>
+<div class="row"style="background-color: #e2e3e5">
+    <div class="col-3">@include('layouts.sidebar')</div>
+    <div class="col-7" style="min-height: 550px">@yield('content')</div>
 </div>
 @include('layouts.footer')
 </body>
