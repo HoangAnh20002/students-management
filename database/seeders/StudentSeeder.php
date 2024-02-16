@@ -19,17 +19,15 @@ class StudentSeeder extends Seeder
         $faker = Faker::create();
 
         for ($i = 0; $i < 95; $i++) {
-            // Tạo người dùng mới
             $user = User::create([
                 "name" => $faker->userName,
                 "password" => Hash::make('12345678'),
                 "full_name" => $faker->name . "nguyen",
+                'role' => '0',
             ]);
 
-            // Chọn một khoa ngẫu nhiên
             $department = Department::inRandomOrder()->first();
 
-            // Tạo sinh viên với thông tin
             Student::create([
                 'user_id' => $user->id,
                 'department_id' => $department->id,

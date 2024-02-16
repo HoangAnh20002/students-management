@@ -16,17 +16,19 @@ class UserSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i <50;$i++) {
             User::create([
                 "name" => $faker->name(),
                 "password" => Hash::make('12345678'),
                 "full_name" => $faker->name . "nguyen",
+                "role" => '1',
             ]);
         }
         User::create([
             'name' => 'anh',
             'password' => Hash::make('123123'),
             'full_name' => 'nguyen anh',
+            'role' =>'1',
         ]);
 
     }

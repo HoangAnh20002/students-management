@@ -12,7 +12,7 @@ class CourseSeeder extends Seeder
      */
     public function run(): void
     {
-        $Courses = ['Toán', 'Văn ', 'Tiếng Anh', 'Thể dục'];
+        $Courses = ['Math', 'History ', 'English', 'Chemistry '];
         foreach ($Courses as $value) {
             Course::create([
                 'name' => $value,

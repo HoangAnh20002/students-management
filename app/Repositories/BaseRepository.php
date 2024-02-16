@@ -26,10 +26,13 @@ abstract class BaseRepository implements BaseRepositoryInterface
     }
     public function update($id, array $data){
         $record = $this->model->find($id);
-        return $record->updade($data);
+        return $record->update($data);
     }
     public function delete($id)
     {
         return $this->model->destroy($id);
+    }
+    public function paginate($page){
+        return $this->model->paginate($page);
     }
 }

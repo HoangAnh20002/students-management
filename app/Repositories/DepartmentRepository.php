@@ -2,13 +2,12 @@
 namespace App\Repositories;
 use App\Models\Department;
 use App\Repositories\Interfaces\DepartmentRepositoryInterface;
-use Illuminate\Database\Eloquent\Model;
 
 class DepartmentRepository extends BaseRepository implements DepartmentRepositoryInterface
 {
-   public function __construct(Model $model)
+   public function __construct()
    {
-       parent::__construct($model);
+       parent::__construct();
    }
    public function getModel()
    {
