@@ -1,13 +1,3 @@
-
-# Student management
-after clone project,perform the flowing steps
-
-- install composer and setup composer
-+ "https://getcomposer.org/Composer-Setup.exe"
-+open the Composer-Setup.exe file you downloaded
-+in installer interface,proceed by clicking the buttons to accept the terms and choose the default installation options
-+ check if composer has been successfully installed "composer --verson"
-
 - install xampp and setup xampp
 +"https://www.apachefriends.org/download.html"
 + run xampp after downloaded

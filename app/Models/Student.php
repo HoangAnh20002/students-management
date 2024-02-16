@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Student extends Model
 {
     use HasFactory;
-    protected $fillable = ['user_id','department_id','student_code','email','birth_date'];
+    protected $fillable = ['user_id','department_id','student_code','birth_date'];
 
     public function user(){
         return $this->belongsTo(User::class);

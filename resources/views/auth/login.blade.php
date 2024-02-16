@@ -7,9 +7,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
-@if(session('error'))
+@if($errors->any())
     <div class="alert alert-danger">
-        {{ session('error') }}
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
     </div>
 @endif
 
@@ -20,13 +24,13 @@
         <div class="border 3px; mx-auto" style="width: 500px;">
             <h3 class="text-center mt-3 font-weight-bold">Login</h3>
             <div class="form-group px-5">
-                <label for="name">Name:</label>
-                <input type="text" class="form-control" name="name" id="name" value="{{ old('name') }}" required autofocus>
+                <label for="name">Email</label>
+                <input type="email" class="form-control" name="email" id="email" maxlength="255" value="{{ old('email') }}">
             </div>
 
             <div class="form-group px-5">
-                <label for="password">Password:</label>
-                <input type="password" class="form-control" name="password" id="password" required>
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" maxlength="16" id="password">
             </div>
 
             <div class="form-group text-center">

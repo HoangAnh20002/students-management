@@ -10,6 +10,7 @@
         {{session('error')}}
     </div>
 @endif
+<div style="margin-left:150px;">
 <form method="GET" action="{{ route('department.create') }}">
     <div class="d-flex justify-content-around">
         <h2 class="ml-5 mt-3">Department List</h2>
@@ -74,5 +75,5 @@
 <div style="margin-bottom: 22px">
     {{ $departments->links('vendor.pagination.bootstrap-5') }}
 </div>
-
+</div>
 @endsection

@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
+use App\Http\Requests\LoginRequest;
 use App\Repositories\AuthRepository;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
@@ -18,19 +18,22 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $credentials = $request->only('name', 'password');
+        $validated = $request->validated();
+        if (!$validated) {
+            return redirect()->back()->withErrors($validated)->withInput();
+        }
+        $credentials = $request->only('email', 'password');
         if ($this->authRepository->authenticate($credentials)) {
-            if(Auth::user()->role == 1){
+            if(Auth::user()->role == '1'){
                 return redirect('adminMain');
             }
             return redirect('studentMain');
         }
-        return redirect()->back()->withInput()->withErrors([
-            'name' => 'Error input',
+        return redirect('login')->withInput()->withErrors([
+            'email' => 'Invalid email or password.'
         ]);
-
     }
     public function logout(){
         Auth::logout();
