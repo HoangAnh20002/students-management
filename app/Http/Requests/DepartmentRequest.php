@@ -24,7 +24,13 @@ class DepartmentRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[^\s].*[^\s]$/',
+                'regex:/^[a-zA-Z0-9 ]*$/',
+            ],
         ];
     }
 
@@ -39,6 +45,8 @@ class DepartmentRequest extends FormRequest
             'name.required' => 'Name is required',
             'name.string' => 'Name must be a string',
             'name.max' => 'Name must not exceed 255 characters',
+            'name.regex' => 'Name cannot contain special characters',
         ];
     }
+
 }
