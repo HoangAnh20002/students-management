@@ -12,7 +12,7 @@
 </head>
 <body>
 @include('layouts.header')
-<div class="row"style="background-color: #e2e3e5">
+<div class="row" style="background-color: #e2e3e5">
     <div class="col-3">@include('layouts.sidebar')</div>
     <div class="col-7" style="min-height: 550px">@yield('content')</div>
 </div>

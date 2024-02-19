@@ -25,13 +25,5 @@ class UserSeeder extends Seeder
                 "role" => '1',
             ]);
         }
-//        User::create([
-//            'name' => 'anh',
-//            'password' => Hash::make('123123'),
-//            'email' => $faker->unique()->safeEmail,
-//            'full_name' => 'nguyen anh',
-//            'role' =>'1',
-//        ]);
-
     }
 }

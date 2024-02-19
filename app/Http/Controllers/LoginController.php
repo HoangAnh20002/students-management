@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use App\Repositories\AuthRepository;
 use Illuminate\Support\Facades\Auth;
+use App\Enums\Base;
 
 class LoginController extends Controller
 {
@@ -20,13 +21,9 @@ class LoginController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $validated = $request->validated();
-        if (!$validated) {
-            return redirect()->back()->withErrors($validated)->withInput();
-        }
         $credentials = $request->only('email', 'password');
         if ($this->authRepository->authenticate($credentials)) {
-            if(Auth::user()->role == '1'){
+            if(Auth::user()->role == Base::Admin){
                 return redirect('adminMain');
             }
             return redirect('studentMain');

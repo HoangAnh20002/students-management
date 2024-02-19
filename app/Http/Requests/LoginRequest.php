@@ -23,8 +23,8 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|max:255|regex:/^\S*$/',
-            'password' => 'required|string|min:8|max:16',
+            'email' => 'required|email|max:255|regex:/^[\w\-\.]+@([\w\-]+\.)+[\w\-]+$/',
+            'password' => 'required|min:8|max:16',
         ];
     }
     public function messages()
@@ -35,7 +35,6 @@ class LoginRequest extends FormRequest
             'email.max' => 'Email must not exceed 255 characters',
             'email.regex' => 'Email must not contain special characters',
             'password.required' => 'Password is required',
-            'password.string' => 'Password must be a string',
             'password.min' => 'Password must be at least 8 characters',
             'password.max' => 'Password must not exceed 16 characters',
         ];

@@ -21,22 +21,23 @@
     <form method="POST" action="{{ route('login') }}">
         @csrf
         <div>
-        <div class="border 3px; mx-auto" style="width: 500px;">
-            <h3 class="text-center mt-3 font-weight-bold">Login</h3>
-            <div class="form-group px-5">
-                <label for="name">Email</label>
-                <input type="email" class="form-control" name="email" id="email" maxlength="255" value="{{ old('email') }}">
-            </div>
+            <div class="border 3px; mx-auto" style="width: 500px;">
+                <h3 class="text-center mt-3 font-weight-bold">Login</h3>
+                <div class="form-group px-5">
+                    <label for="name">Email</label>
+                    <input type="email" class="form-control" name="email" id="email" maxlength="255"
+                           @if(old('email')) value="{{ old('email') }}" @endif required>
+                </div>
 
-            <div class="form-group px-5">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" name="password" maxlength="16" id="password">
-            </div>
+                <div class="form-group px-5">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" name="password" maxlength="16" id="password" required>
+                </div>
 
-            <div class="form-group text-center">
-                <button type="submit" class="btn btn-primary">Login</button>
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
             </div>
-        </div>
         </div>
     </form>
 </div>

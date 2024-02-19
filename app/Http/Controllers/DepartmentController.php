@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Base;
 use App\Models\Department;
 use App\Repositories\DepartmentRepository;
-use Illuminate\Http\Request;
+use App\Http\Requests\DepartmentRequest;
 use Illuminate\Support\Facades\Auth;
 
 class DepartmentController extends Controller
@@ -14,15 +15,16 @@ class DepartmentController extends Controller
      */
     protected $departmentRepository;
 
-    public function __construct(DepartmentRepository $departmentRepository,){
+    public function __construct(DepartmentRepository $departmentRepository,)
+    {
         $this->departmentRepository = $departmentRepository;
     }
+
     public function index()
     {
-        $page = 10;
         $role = Auth::user()->role;
-        $departments = $this->departmentRepository->paginate($page);
-        return view('department.index',compact('departments','role'));
+        $departments = $this->departmentRepository->paginate(Base::Page);
+        return view('department.index', compact('departments', 'role'));
     }
 
     /**
@@ -31,7 +33,7 @@ class DepartmentController extends Controller
     public function create()
     {
         $role = Auth::user()->role;
-        if ($role == '0') {
+        if ($role == Base::Student) {
             return redirect('login')->with('error', 'Permission denied. Please log in with a valid account.');
         }
         return view('department.create', compact('role'));
@@ -40,14 +42,9 @@ class DepartmentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(DepartmentRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
-        $departmentData = [
-            'name' => $request->input('name'),
-        ];
+        $departmentData = $request->only('name');
 
         $this->departmentRepository->create($departmentData);
 
@@ -57,7 +54,7 @@ class DepartmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Department $department)
+    public function show()
     {
         //
     }
@@ -68,28 +65,22 @@ class DepartmentController extends Controller
     public function edit(Department $department)
     {
         $role = Auth::user()->role;
-        if ($role == '0') {
+        if ($role == Base::Student) {
             return redirect('login')->with('error', 'Permission denied. Please log in with a valid account.');
         }
-        return view('department.edit',compact('department','role'));
+        return view('department.edit', compact('department', 'role'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(DepartmentRequest $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
+        $departmentData = $request->only('name');
         $department = $this->departmentRepository->find($id);
         if (!$department) {
             return redirect('department')->with('error', 'Department not found');
         }
-
-        $departmentData = [
-            'name' => $request->input('name'),
-        ];
 
         $this->departmentRepository->update($id, $departmentData);
 
