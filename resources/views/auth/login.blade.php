@@ -29,7 +29,7 @@
                 </div>
                 <div class="form-group px-5">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" name="password" maxlength="16" id="password" required>
+                    <input type="password" class="form-control" name="password" maxlength="16" minlength="8" id="password" required>
                 </div>
 
                 <div class="form-group text-center">
