@@ -28,7 +28,6 @@ class DepartmentRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                'regex:/^[^\s].*[^\s]$/',
                 'regex:/^[a-zA-Z0-9 ]*$/',
             ],
         ];

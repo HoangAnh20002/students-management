@@ -23,7 +23,7 @@ class DepartmentController extends Controller
     public function index()
     {
         $role = Auth::user()->role;
-        $departments = $this->departmentRepository->paginate(Base::Page);
+        $departments = $this->departmentRepository->paginate(Base::PAGE);
         return view('department.index', compact('departments', 'role'));
     }
 
@@ -33,7 +33,7 @@ class DepartmentController extends Controller
     public function create()
     {
         $role = Auth::user()->role;
-        if ($role == Base::Student) {
+        if ($role == Base::STUDENT) {
             return redirect('login')->with('error', 'Permission denied. Please log in with a valid account.');
         }
         return view('department.create', compact('role'));
@@ -44,9 +44,8 @@ class DepartmentController extends Controller
      */
     public function store(DepartmentRequest $request)
     {
-        $departmentData = $request->only('name');
 
-        $this->departmentRepository->create($departmentData);
+        $this->departmentRepository->create($request->only('name'));
 
         return redirect('department')->with('success', 'Department added successfully');
     }
@@ -62,27 +61,31 @@ class DepartmentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Department $department)
+    public function edit($id)
     {
         $role = Auth::user()->role;
-        if ($role == Base::Student) {
+        if ($role == Base::STUDENT) {
             return redirect('login')->with('error', 'Permission denied. Please log in with a valid account.');
         }
-        return view('department.edit', compact('department', 'role'));
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(DepartmentRequest $request, $id)
-    {
-        $departmentData = $request->only('name');
         $department = $this->departmentRepository->find($id);
+
         if (!$department) {
             return redirect('department')->with('error', 'Department not found');
         }
 
-        $this->departmentRepository->update($id, $departmentData);
+        return view('department.edit', compact('department', 'role'));
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(DepartmentRequest $request)
+    {
+        $departmentData = $request->only('name');
+        $id = $request->input('id');
+        $this->departmentRepository->update($id,$departmentData);
 
         return redirect('department')->with('success', 'Department updated successfully');
     }

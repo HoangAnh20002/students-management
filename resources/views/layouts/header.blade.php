@@ -3,13 +3,13 @@
 @endphp
 <div class="row border border-bottom-2" style="height: 80px">
     <div class="col-3 text-center my-auto" style="font-size: 25px; padding-right: 100px;">
-        <a class="text-decoration-none text-dark fw-semibold" @if($role == Base::Admin) href="{{ route('adminMain') }}"
-           @elseif($role == Base::Student) href="{{ route('studentMain') }}" @endif>Apple University</a>
+        <a class="text-decoration-none text-dark fw-semibold" @if($role == Base::ADMIN) href="{{ route('adminMain') }}"
+           @elseif($role == Base::STUDENT) href="{{ route('studentMain') }}" @endif>Apple University</a>
     </div>
     <div class="col-8 text-right" style="height: 80px">
         <div class="text-right mt-3">
             <div class="mr-2">
-                @if($role == Base::Admin)
+                @if($role == Base::ADMIN)
                     Admin
                 @else
                     Student

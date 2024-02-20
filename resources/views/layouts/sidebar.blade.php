@@ -1,4 +1,4 @@
-<div style="width: 200px; height: 100%;background-color: #33444b">
+<div class="bg-dark h-100 w-50">
     <div class="border border-white text-white p-3">
         <a href="{{ route('department.index') }}" style="text-decoration: none;color: white">Department</a>
     </div>

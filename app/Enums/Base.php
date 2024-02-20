@@ -5,7 +5,7 @@ use Illuminate\Validation\Rules\Enum;
 
 final class Base extends Enum
 {
-    const Admin = '1';
-    const Student = '0';
-    const Page = 10;
+    const ADMIN = '1';
+    const STUDENT = '0';
+    const PAGE = 10;
 }

@@ -21,9 +21,8 @@ class LoginController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $credentials = $request->only('email', 'password');
-        if ($this->authRepository->authenticate($credentials)) {
-            if(Auth::user()->role == Base::Admin){
+        if ($this->authRepository->authenticate($request->only('email', 'password'))) {
+            if(Auth::user()->role == Base::ADMIN){
                 return redirect('adminMain');
             }
             return redirect('studentMain');

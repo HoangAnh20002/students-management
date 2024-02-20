@@ -3,7 +3,7 @@
 @endphp
 @extends('layouts.home')
 @section('content')
-    @if($role == Base::Admin)
+    @if($role == Base::ADMIN)
         {{\DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs::render('department')}}
     @else
         {{\DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs::render('department_st')}}
@@ -22,7 +22,7 @@
     <form method="GET" action="{{ route('department.create') }}">
         <div class="d-flex mt-3 justify-content-around">
             <h2>Department List</h2>
-            @if($role == Base::Admin)
+            @if($role == Base::ADMIN)
                 <div>
                     <button class="bg-primary text-white btn" type="submit">Create</button>
                 </div>
@@ -34,7 +34,7 @@
         <tr>
             <th scope="col">#</th>
             <th scope="col">Name</th>
-            @if($role == Base::Admin)
+            @if($role == Base::ADMIN)
                 <th scope="col">Action</th>
             @endif
         </tr>
@@ -44,7 +44,7 @@
             <tr>
                 <th scope="row">{{$department->id}}</th>
                 <td>{{$department->name}}</td>
-                @if($role == '1')
+                @if($role == Base::ADMIN)
                     <td>
                         <div class="d-flex">
                             <a href="{{ route('department.edit', ['department' => $department->id]) }}">

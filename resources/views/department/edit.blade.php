@@ -14,9 +14,10 @@
         <h2 class="mt-5">Edit Department</h2>
         <div class="mt-3">
             <div>
-                <form action="{{ route('department.update', $department->id) }}" method="post">
+                <form action="{{ route('department.update', ['department' => $department->id]) }}" method="post">
                     @csrf
                     @method('put')
+                    <input type="hidden" name="id" value="{{ $department->id }}">
                     <label for="name">Department Name:</label>
                     <input type="text" name="name" value="{{ $department->name }}" required maxlength="255">
                     <br/>
