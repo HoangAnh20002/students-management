@@ -2,13 +2,13 @@
     use App\Enums\Base;
 @endphp
 <div class="row border border-bottom-2" style="height: 80px">
-    <div class="col-3 text-center my-auto" style="font-size: 25px; padding-right: 100px;">
+    <div class="col-3 text-center my-auto fs-2" style=" padding-right: 100px;">
         <a class="text-decoration-none text-dark fw-semibold" @if($role == Base::ADMIN) href="{{ route('adminMain') }}"
            @elseif($role == Base::STUDENT) href="{{ route('studentMain') }}" @endif>Apple University</a>
     </div>
-    <div class="col-8 text-right" style="height: 80px">
+    <div class="col-9 text-right" style="height: 80px">
         <div class="text-right mt-3">
-            <div class="mr-2">
+            <div class="mr-4">
                 @if($role == Base::ADMIN)
                     Admin
                 @else
@@ -17,7 +17,7 @@
             @endif
         </div>
         <div>
-            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <button type="button" class="btn mr-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Logout
             </button>
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"

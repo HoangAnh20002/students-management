@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\Base;
 use App\Repositories\CourseRepository;
+use App\Repositories\DepartmentRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\DepartmentRequest;
 
@@ -12,16 +13,17 @@ class CourseController extends Controller
     protected $courseRepository;
 
 
-    public function __construct(CourseRepository $courseRepository)
+    public function __construct(CourseRepository $courseRepository, DepartmentRepository $departmentRepository)
     {
         $this->courseRepository = $courseRepository;
+        $this->departmentRepository = $departmentRepository;
     }
 
     public function index()
     {
-        $role =Auth::user()->role;
+        $role = Auth::user()->role;
         $courses = $this->courseRepository->paginate(Base::PAGE);
-        return view('course.index', compact('courses','role'));
+        return view('course.index', compact('courses', 'role'));
     }
 
     /**
@@ -30,10 +32,11 @@ class CourseController extends Controller
     public function create()
     {
         $role = Auth::user()->role;
+        $departments = $this->departmentRepository->all();
         if ($role == Base::STUDENT) {
             return redirect('login')->with('error', 'Permission denied. Please log in with a valid account.');
         }
-        return view('course.create', compact('role'));
+        return view('course.create', compact('role', 'departments'));
     }
 
     /**
@@ -42,9 +45,11 @@ class CourseController extends Controller
     public function store(DepartmentRequest $request)
     {
 
-        $this->courseRepository->create($request->only('name'));
+        $data = $request->only('name');
+        $departmentIds = $request->input('departments');
+        $this->courseRepository->createWithDepartments($data, $departmentIds);
 
-        return redirect('course')->with('success', 'Department added successfully');
+        return redirect('course')->with('success', 'Course added successfully');
     }
 
     /**
@@ -61,30 +66,31 @@ class CourseController extends Controller
     public function edit($id)
     {
         $role = Auth::user()->role;
+        $departments = $this->departmentRepository->all();
         if ($role == Base::STUDENT) {
             return redirect('login')->with('error', 'Permission denied. Please log in with a valid account.');
         }
 
         $course = $this->courseRepository->find($id);
-
         if (!$course) {
             return redirect('course')->with('error', 'Course not found');
         }
 
-        return view('course.edit', compact('course', 'role'));
+        return view('course.edit', compact('course', 'role', 'departments'));
     }
 
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(DepartmentRequest $request)
+    public function update(DepartmentRequest $request, $id)
     {
-        $courseData = $request->only('name');
-        $id = $request->input('id');
-        $this->courseRepository->update($id,$courseData);
+        $data = $request->only('name');
+        $departmentIds = $request->input('departments');
 
-        return redirect('course')->with('success', 'Department updated successfully');
+        $this->courseRepository->updateWithDepartments($id, $data, $departmentIds);
+
+        return redirect('course')->with('success', 'Course updated successfully');
     }
 
     /**
@@ -92,12 +98,17 @@ class CourseController extends Controller
      */
     public function destroy($id)
     {
+
+    }
+
+    public function softDelete($id)
+    {
         if ($this->courseRepository->hasStudents($id)) {
             return redirect()->route('course.index')->with('error', 'This course has student records and cannot be deleted.');
         }
+        $this->courseRepository->softDelete($id);
 
-        $this->courseRepository->delete($id);
-
-        return redirect()->route('course.index')->with('success', 'Course deleted successfully.');
+        return redirect('course')->with('success', 'Course soft deleted successfully');
     }
+
 }

@@ -18,8 +18,14 @@
                     @csrf
                     @method('put')
                     <input type="hidden" name="id" value="{{ $course->id }}">
-                    <label for="name">Department Name:</label>
+                    <label for="name">Course Name:</label>
                     <input type="text" name="name" value="{{ $course->name }}" required maxlength="255">
+                    <br/>
+                    <label for="departments">Departments:</label><br/>
+                    @foreach($departments as $department)
+                        <input type="checkbox" name="departments[]" value="{{ $department->id }}" {{ in_array($department->id, $course->department->pluck('id')->toArray()) ? 'checked' : '' }}>
+                        <label for="departments">{{ $department->name }}</label><br/>
+                    @endforeach
                     <br/>
                     <button class="btn btn-primary mt-3" type="submit">Update</button>
                     <button type="button" class="mt-3 ml-2 bg-danger  rounded text-white btn" data-bs-toggle="modal"
@@ -45,7 +51,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <form action="{{ route('course.destroy', ['course' => $course->id]) }}"
+                                <form action="{{ route('course.softDelete', ['course' => $course->id]) }}"
                                       method="POST">
                                     @csrf
                                     @method('DELETE')

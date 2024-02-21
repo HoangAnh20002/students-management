@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Department extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     protected $fillable = ['name'];
     public function course(){
-        return $this->belongsToMany(Course::class,'department_course','department_id','course_id');
+        return $this->belongsToMany(Course::class,'department_course','department_id','course_id')->withTimestamps();
     }
 }

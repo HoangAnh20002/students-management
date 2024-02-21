@@ -17,9 +17,17 @@
                 @csrf
                 <label for="name">Name:</label>
                 <input type="text" name="name" id="name" required maxlength="255"><br/>
+
+                <label>Departments:</label><br/>
+                @foreach($departments as $department)
+                    <input type="checkbox" id="department_{{ $department->id }}" name="departments[]" value="{{ $department->id }}">
+                    <label for="department_{{ $department->id }}">{{ $department->name }}</label><br/>
+                @endforeach
+
                 <button class="ml-5 mt-3 px-3 bg-primary text-white btn" type="submit">Submit</button>
                 <a class="btn btn-secondary mt-3 ml-2" href="{{ url()->previous() }}">Cancel</a>
             </form>
+
         </div>
     </div>
 @endsection

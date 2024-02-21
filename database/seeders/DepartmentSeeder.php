@@ -20,10 +20,5 @@ class DepartmentSeeder extends Seeder
                 'name' => $value,
             ]);
         }
-        for ($i = 0; $i < 100; $i++) {
-            Department::create([
-                "name" => $faker->name(),
-            ]);
-        }
     }
 }
