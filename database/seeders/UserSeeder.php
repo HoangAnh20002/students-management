@@ -21,15 +21,9 @@ class UserSeeder extends Seeder
                 "name" => $faker->name(),
                 "password" => Hash::make('12345678'),
                 "full_name" => $faker->name . "nguyen",
+                'email' => $faker->unique()->safeEmail,
                 "role" => '1',
             ]);
         }
-        User::create([
-            'name' => 'anh',
-            'password' => Hash::make('123123'),
-            'full_name' => 'nguyen anh',
-            'role' =>'1',
-        ]);
-
     }
 }

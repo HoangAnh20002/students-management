@@ -23,6 +23,7 @@ class StudentSeeder extends Seeder
                 "name" => $faker->userName,
                 "password" => Hash::make('12345678'),
                 "full_name" => $faker->name . "nguyen",
+                'email' => $faker->unique()->safeEmail,
                 'role' => '0',
             ]);
 
@@ -32,7 +33,6 @@ class StudentSeeder extends Seeder
                 'user_id' => $user->id,
                 'department_id' => $department->id,
                 'student_code' => $faker->randomNumber(8),
-                'email' => $faker->unique()->safeEmail,
                 'birth_date' => $faker->date,
                 'image' => $faker->imageUrl,
             ]);

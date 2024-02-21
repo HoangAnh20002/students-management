@@ -1,7 +1,8 @@
-<div style="width: 200px; height: 100%;background-color: #004f74">
+<div class="bg-dark h-100 w-50">
     <div class="border border-white text-white p-3">
-            <a href="department" style="text-decoration: none;color: white">Department</a>
+        <a href="{{ route('department.index') }}" class="text-decoration-none text-white">Department</a>
     </div>
+
     <div class="border border-white text-white p-3">
         <a href="#" style="text-decoration: none;color: white">Student</a>
     </div>
