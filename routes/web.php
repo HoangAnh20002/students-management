@@ -13,8 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [\App\Http\Controllers\CourseController::class, 'index']);
-
+Route::get('/', function () {
+    return view('welcome');
+});
 Route::group(['middleware' => 'adminCheck'], function () {
     Route::get('/adminMain',[\App\Http\Controllers\UserController::class,'index'])->name('adminMain');
 });
@@ -28,3 +29,4 @@ Route::post('/login', [\App\Http\Controllers\LoginController::class,'login']);
 Route::get('/logout',[\App\Http\Controllers\LoginController::class,'logout'])->name('logout');
 
 Route::resource('/department',\App\Http\Controllers\DepartmentController::class);
+Route::resource('/course',\App\Http\Controllers\CourseController::class);

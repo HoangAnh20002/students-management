@@ -30,3 +30,22 @@ Breadcrumbs::register('departmentEdit', function ($breadcrumbs, $department) {
     $breadcrumbs->push('Edit', route('department.edit', $department));
 });
 
+Breadcrumbs::register('course',function ($breadcrumbs){
+    $breadcrumbs->parent('home_ad');
+    $breadcrumbs->push('Course',route('course.index'));
+});
+
+Breadcrumbs::register('course_st',function ($breadcrumbs){
+    $breadcrumbs->parent('home_st');
+    $breadcrumbs->push('Course',route('course.index'));
+});
+
+Breadcrumbs::register('courseCreate',function ($breadcrumbs){
+    $breadcrumbs->parent('course');
+    $breadcrumbs->push('Create',route('course.create'));
+});
+
+Breadcrumbs::register('courseEdit', function ($breadcrumbs, $course) {
+    $breadcrumbs->parent('course');
+    $breadcrumbs->push('Edit', route('course.edit', $course));
+});

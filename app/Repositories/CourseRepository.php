@@ -14,8 +14,8 @@ class CourseRepository extends BaseRepository implements CourseRepositoryInterfa
     public function getModel(){
       return $this->model = app()->make(Course::class);
     }
-    public function getAll($id,$name)
-    {
-        // TODO: Implement getAll() method.
+    public function hasStudents($id){
+        $course = Course::findOrFail($id);
+        return $course->student()->exists();
     }
 }

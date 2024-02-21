@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Base;
 use App\Repositories\CourseRepository;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\DepartmentRequest;
 
 class CourseController extends Controller
 {
@@ -16,7 +19,85 @@ class CourseController extends Controller
 
     public function index()
     {
-        $courses = $this->courseRepository->all();
-        return view('welcome', compact('courses'));
+        $role =Auth::user()->role;
+        $courses = $this->courseRepository->paginate(Base::PAGE);
+        return view('course.index', compact('courses','role'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $role = Auth::user()->role;
+        if ($role == Base::STUDENT) {
+            return redirect('login')->with('error', 'Permission denied. Please log in with a valid account.');
+        }
+        return view('course.create', compact('role'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(DepartmentRequest $request)
+    {
+
+        $this->courseRepository->create($request->only('name'));
+
+        return redirect('course')->with('success', 'Department added successfully');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show()
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($id)
+    {
+        $role = Auth::user()->role;
+        if ($role == Base::STUDENT) {
+            return redirect('login')->with('error', 'Permission denied. Please log in with a valid account.');
+        }
+
+        $course = $this->courseRepository->find($id);
+
+        if (!$course) {
+            return redirect('course')->with('error', 'Course not found');
+        }
+
+        return view('course.edit', compact('course', 'role'));
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(DepartmentRequest $request)
+    {
+        $courseData = $request->only('name');
+        $id = $request->input('id');
+        $this->courseRepository->update($id,$courseData);
+
+        return redirect('course')->with('success', 'Department updated successfully');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id)
+    {
+        if ($this->courseRepository->hasStudents($id)) {
+            return redirect()->route('course.index')->with('error', 'This course has student records and cannot be deleted.');
+        }
+
+        $this->courseRepository->delete($id);
+
+        return redirect()->route('course.index')->with('success', 'Course deleted successfully.');
     }
 }
