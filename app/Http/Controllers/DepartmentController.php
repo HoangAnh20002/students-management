@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Base;
-use App\Models\Department;
 use App\Repositories\DepartmentRepository;
 use App\Http\Requests\DepartmentRequest;
 use Illuminate\Support\Facades\Auth;
