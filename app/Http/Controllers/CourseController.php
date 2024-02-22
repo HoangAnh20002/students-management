@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Base;
+use App\Http\Requests\CourseRequest;
 use App\Repositories\CourseRepository;
 use App\Repositories\DepartmentRepository;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\DepartmentRequest;
 
 class CourseController extends Controller
 {
@@ -42,7 +42,7 @@ class CourseController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(DepartmentRequest $request)
+    public function store(CourseRequest $request)
     {
 
         $data = $request->only('name');
@@ -83,7 +83,7 @@ class CourseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(DepartmentRequest $request, $id)
+    public function update(CourseRequest $request, $id)
     {
         $data = $request->only('name');
         $departmentIds = $request->input('departments');
