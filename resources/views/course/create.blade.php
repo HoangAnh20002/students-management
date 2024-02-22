@@ -12,7 +12,7 @@
     @endif
     <div class="m-5 h-100">
         <h2>Create Course</h2>
-        <div class="border p-3 w-auto">
+        <div class="p-3 w-auto">
             <form action="{{ route('course.store') }}" method="post">
                 @csrf
                 <label for="name">Name:</label>
