@@ -35,10 +35,4 @@ abstract class BaseRepository implements BaseRepositoryInterface
     public function paginate($page){
         return $this->model->paginate($page);
     }
-    public function softDelete($id){
-        $record = $this->model->find($id);
-        if ($record) {
-            $record->delete(['deleted_at' => now()]);
-        }
-    }
 }

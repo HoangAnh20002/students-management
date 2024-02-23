@@ -1,10 +1,10 @@
 @php
     use App\Enums\Base;
 @endphp
-<div class="bg-secondary">
+<div class="bg-light">
     <div class="text-right" style="height: 80px">
         <div class="text-right">
-            <div class="mr-4 text-white pt-2">
+            <div class="mr-4 pt-2">
                 @if($role == Base::ADMIN)
                     Admin
                 @else
@@ -13,7 +13,7 @@
             @endif
         </div>
         <div>
-            <button type="button" class="btn mr-2 text-white" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <button type="button" class="btn mr-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Logout
             </button>
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"

@@ -10,7 +10,7 @@
             </ul>
         </div>
     @endif
-    <div class="m-5 h-100">
+    <div class="m-5 h-100  border border-secondary bg-light p-3">
         <h2>Create Course</h2>
         <div class="p-3 w-auto">
             <form action="{{ route('course.store') }}" method="post">
@@ -18,7 +18,7 @@
                 <label for="name">Name:</label>
                 <input type="text" name="name" id="name" required maxlength="255"><br/>
 
-                <label>Departments:</label><br/>
+                <label class="mt-3">Departments:</label><br/>
                 @foreach($departments as $department)
                     <input type="checkbox" id="department_{{ $department->id }}" name="departments[]" value="{{ $department->id }}">
                     <label for="department_{{ $department->id }}">{{ $department->name }}</label><br/>

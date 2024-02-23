@@ -10,7 +10,7 @@
             </ul>
         </div>
     @endif
-    <div class="m-5 h-100">
+    <div class="m-5 h-100 border border-secondary bg-light p-3">
         <h2>Create Department</h2>
         <div class="p-3 w-auto">
             <form action="{{ route('department.store') }}" method="post">

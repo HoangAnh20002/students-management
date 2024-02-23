@@ -1,7 +1,6 @@
 <?php
 use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
 
-
 Breadcrumbs::register('home_ad',function ($breadcrumbs){
     $breadcrumbs->push('Home',route('adminMain'));
 });

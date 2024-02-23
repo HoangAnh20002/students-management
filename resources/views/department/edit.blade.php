@@ -10,8 +10,8 @@
             </ul>
         </div>
     @endif
-    <div class="container h-100">
-        <h2 class="mt-5">Edit Department</h2>
+    <div class="mt-5 container h-100 border border-secondary bg-light p-3">
+        <h2>Edit Department</h2>
         <div class="mt-3">
             <div>
                 <form action="{{ route('department.update', ['department' => $department->id]) }}" method="post">

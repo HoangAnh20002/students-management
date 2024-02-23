@@ -22,7 +22,7 @@ class CourseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255,regex:/^[a-zA-Z0-9]*$/',
+            'name' => 'required|string|max:255|regex:/^[a-zA-Z0-9]*$/',
             'departments' => 'required|array|min:1',
             'departments.*' => 'integer|exists:departments,id',
         ];
@@ -35,10 +35,10 @@ class CourseRequest extends FormRequest
             'name.max' => 'Name must not exceed 255 characters',
             'name.regex' => 'Name cannot contain special characters',
             'departments.required' => 'At least one department must be selected',
-            'departments.array' => 'Departments must be an array',
+            'departments.array' => 'The selected department is invalid',
             'departments.min' => 'At least one department must be selected',
-            'departments.*.integer' => 'Each department ID must be an integer',
-            'departments.*.exists' => 'Invalid department ID selected',
+            'departments.*.integer' => 'The selected department is invalid',
+            'departments.*.exists' => 'The selected department is invalid',
         ];
     }
 }

@@ -30,5 +30,3 @@ Route::get('/logout',[\App\Http\Controllers\LoginController::class,'logout'])->n
 
 Route::resource('/department',\App\Http\Controllers\DepartmentController::class);
 Route::resource('/course',\App\Http\Controllers\CourseController::class);
-Route::delete('course/softDelete/{course}', [\App\Http\Controllers\CourseController::class,'softDelete'])->name('course.softDelete');
-

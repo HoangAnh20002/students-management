@@ -98,17 +98,16 @@ class CourseController extends Controller
      */
     public function destroy($id)
     {
-
-    }
-
-    public function softDelete($id)
-    {
         if ($this->courseRepository->hasStudents($id)) {
             return redirect()->route('course.index')->with('error', 'This course has student records and cannot be deleted.');
         }
-        $this->courseRepository->softDelete($id);
-
-        return redirect('course')->with('success', 'Course soft deleted successfully');
+        $record = $this->courseRepository->find($id);
+        if ($record) {
+            $record->delete();
+            return redirect()->route('course.index')->with('success', 'Record deleted successfully');
+        } else {
+            return redirect()->route('course.index')->with('error', 'Record not found');
+        }
     }
 
 }

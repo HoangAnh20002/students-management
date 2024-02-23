@@ -72,7 +72,7 @@
                                                 Close
                                             </button>
                                             <form
-                                                action="{{ route('course.softDelete', ['course' => $course->id]) }}"
+                                                action="{{ route('course.destroy', ['course' => $course->id]) }}"
                                                 method="POST">
                                                 @csrf
                                                 @method('DELETE')

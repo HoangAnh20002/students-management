@@ -10,8 +10,8 @@
             </ul>
         </div>
     @endif
-    <div class="container h-100">
-        <h2 class="mt-5">Edit Course</h2>
+    <div class="container h-100 mt-5 border border-secondary bg-light p-3">
+        <h2>Edit Course</h2>
         <div class="mt-3">
             <div>
                 <form action="{{ route('course.update', ['course' => $course->id]) }}" method="post">
@@ -21,7 +21,7 @@
                     <label for="name">Course Name:</label>
                     <input type="text" name="name" value="{{ $course->name }}" required maxlength="255">
                     <br/>
-                    <label for="departments">Departments:</label><br/>
+                    <label class="mt-3" for="departments">Departments:</label><br/>
                     @foreach($departments as $department)
                         <input type="checkbox" name="departments[]" value="{{ $department->id }}" {{ in_array($department->id, $course->department->pluck('id')->toArray()) ? 'checked' : '' }}>
                         <label for="departments">{{ $department->name }}</label><br/>
@@ -51,7 +51,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <form action="{{ route('course.softDelete', ['course' => $course->id]) }}"
+                                <form action="{{ route('course.destroy', ['course' => $course->id]) }}"
                                       method="POST">
                                     @csrf
                                     @method('DELETE')
