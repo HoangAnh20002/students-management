@@ -94,7 +94,7 @@ class DepartmentController extends Controller
         $this->departmentRepository->update($id, $departmentData);
         $department = $this->departmentRepository->findSoftDelete($id);
         if (!$department) {
-            return redirect('course')->with('error', 'The record not found');
+            return redirect('department')->with('error', 'The record not found');
         }
         return redirect('department')->with('success', 'Department updated successfully');
     }
