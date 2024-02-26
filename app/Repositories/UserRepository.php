@@ -14,4 +14,8 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
   {
       return $this->model = app()->make(User::class);
   }
+    public function findByRole($role)
+    {
+        return $this->model->where('role', $role);
+    }
 }

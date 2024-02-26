@@ -15,7 +15,7 @@
 
 
     <div class="border border-white p-3">
-        <a href="#" class="text-decoration-none text-white">Student</a>
+        <a href="{{route('student.index')}}" class="text-decoration-none text-white">Student</a>
     </div>
     <div class="border border-white p-3">
         <a href="{{route('course.index')}}" class="text-decoration-none text-white">Course</a>
