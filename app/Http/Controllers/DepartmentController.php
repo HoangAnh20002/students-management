@@ -66,7 +66,10 @@ class DepartmentController extends Controller
         if ($role == Base::STUDENT) {
             return redirect('login')->with('error', 'Permission denied. Please log in with a valid account.');
         }
-
+        $department = $this->departmentRepository->findSoftDelete($id);
+        if (!$department) {
+            return redirect('department')->with('error', 'The record not found');
+        }
         $department = $this->departmentRepository->find($id);
 
         if (!$department) {
@@ -84,8 +87,15 @@ class DepartmentController extends Controller
     {
         $departmentData = $request->only('name');
         $id = $request->input('id');
-        $this->departmentRepository->update($id,$departmentData);
-
+        $department = $this->departmentRepository->findSoftDelete($id);
+        if (!$department) {
+            return redirect('department')->with('error', 'The record not found');
+        }
+        $this->departmentRepository->update($id, $departmentData);
+        $department = $this->departmentRepository->findSoftDelete($id);
+        if (!$department) {
+            return redirect('department')->with('error', 'The record not found');
+        }
         return redirect('department')->with('success', 'Department updated successfully');
     }
 
@@ -94,6 +104,10 @@ class DepartmentController extends Controller
      */
     public function destroy($id)
     {
+        $department = $this->departmentRepository->findSoftDelete($id);
+        if (!$department) {
+            return redirect('department')->with('error', 'The record not found');
+        }
         $department = $this->departmentRepository->find($id);
 
         if (!$department) {

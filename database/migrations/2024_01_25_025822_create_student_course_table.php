@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedInteger('student_id');
             $table->unsignedInteger('course_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

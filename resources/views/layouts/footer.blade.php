@@ -1,8 +1,8 @@
-<div class="row h-100" >
-    <div class="col-4 text-center text-white my-auto">
+<div class="row h-25 bg-secondary no-gutters">
+    <div class="col-4 py-5 text-center text-white my-auto">
 
     </div>
-    <div class="col-6">
+    <div class="col-8">
 
     </div>
 </div>

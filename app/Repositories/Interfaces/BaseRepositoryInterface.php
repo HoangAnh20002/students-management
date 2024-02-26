@@ -14,4 +14,5 @@ interface BaseRepositoryInterface
     public function delete($id);
 
     public function paginate($page);
+    public function findSoftDelete($id);
 }
