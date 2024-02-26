@@ -75,6 +75,10 @@ class CourseController extends Controller
         if (!$course) {
             return redirect('course')->with('error', 'Course not found');
         }
+        $course = $this->courseRepository->findSoftDelete($id);
+        if (!$course) {
+            return redirect('course')->with('error', 'The record not found');
+        }
 
         return view('course.edit', compact('course', 'role', 'departments'));
     }
@@ -83,11 +87,16 @@ class CourseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(CourseRequest $request, $id)
+    public function update(CourseRequest $request)
     {
         $data = $request->only('name');
+        $id = $request->input('id');
         $departmentIds = $request->input('departments');
 
+        $course = $this->courseRepository->findSoftDelete($id);
+        if (!$course) {
+            return redirect('course')->with('error', 'The record not found');
+        }
         $this->courseRepository->updateWithDepartments($id, $data, $departmentIds);
 
         return redirect('course')->with('success', 'Course updated successfully');
@@ -100,6 +109,10 @@ class CourseController extends Controller
     {
         if ($this->courseRepository->hasStudents($id)) {
             return redirect()->route('course.index')->with('error', 'This course has student records and cannot be deleted.');
+        }
+        $course = $this->courseRepository->findSoftDelete($id);
+        if (!$course) {
+            return redirect('course')->with('error', 'The record not found');
         }
         $record = $this->courseRepository->find($id);
         if ($record) {
