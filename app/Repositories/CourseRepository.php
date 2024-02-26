@@ -31,4 +31,7 @@ class CourseRepository extends BaseRepository implements CourseRepositoryInterfa
         $course->department()->sync($departmentIds);
         return $course;
     }
+    public function getTotalCoures(){
+        return $this->model->count();
+    }
 }

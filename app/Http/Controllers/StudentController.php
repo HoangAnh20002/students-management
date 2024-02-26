@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Base;
+use App\Repositories\CourseRepository;
 use App\Repositories\StudentRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
@@ -11,17 +12,19 @@ class StudentController extends Controller
 {
     protected $studentRepository;
     protected $userRepository;
+    protected $courseRepository;
 
-    public function __construct(StudentRepository $studentRepository,UserRepository $userRepository)
+    public function __construct(StudentRepository $studentRepository,UserRepository $userRepository,CourseRepository $courseRepository)
     {
         $this->studentRepository = $studentRepository;
         $this->userRepository = $userRepository;
+        $this->courseRepository = $courseRepository;
     }
     public function index()
     {
-        $students = $this->studentRepository->paginate(Base::PAGE);
-        $students_data = $this->userRepository->findByRole(0)->paginate(Base::PAGE);
-        return view('student.index', compact('students','students_data'));
+        $course_sum = $this->courseRepository->getTotalCoures();
+        $students = $this->studentRepository->getAllStudentsWithUserInfo();
+        return view('student.index', compact('students','course_sum'));
     }
 
     /**
@@ -29,12 +32,9 @@ class StudentController extends Controller
      */
     public function create()
     {
-        $role = Auth::user()->role;
-        $departments = $this->departmentRepository->all();
-        if ($role == Base::STUDENT) {
-            return redirect('login')->with('error', 'Permission denied. Please log in with a valid account.');
-        }
-        return view('course.create', compact('role', 'departments'));
+        $students = $this->studentRepository->all();
+
+        return view('student.create', compact('students'));
     }
 
     /**

@@ -1,10 +1,10 @@
 @php
     use App\Enums\Base;
+    $role = Base::ADMIN;
 @endphp
 @extends('layouts.home')
 @section('content')
-{{--    {{dd($students_data)}}--}}
-        {{\DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs::render('department')}}
+        {{\DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs::render('student')}}
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
@@ -34,32 +34,48 @@
             <th scope="col">Student Code</th>
             <th scope="col">Image</th>
             <th scope="col">Birth date</th>
-            <th scope="col">Action</th>
             <th scope="col">Course registered</th>
+            <th scope="col">Action</th>
         </tr>
         </thead>
         <tbody>
-        @foreach($departments as $department)
+        @foreach($students as $student)
             <tr>
-                <th scope="row">{{$department->id}}</th>
-                <td>{{$department->name}}</td>
-                @if($role == Base::ADMIN)
+                <th scope="row">{{$student->id}}</th>
+                <td>{{$student->user->name}}</td>
+                <td>{{$student->user->full_name}}</td>
+                <td>{{$student->user->email}}</td>
+                <td>{{$student->student_code}}</td>
+                <td><img src="{{$student->image}}" class="h-50 w-50"></td>
+                <td>{{$student->birth_date}}</td>
+                <td><div class="d-flex">
+                        <div>
+                            {{$student->course_count}}
+                        </div>
+                        <div>
+                            @if($student->course_count != $course_sum)
+                                <button class="btn bg-success ml-3 text-white">Notice</button>
+                            @endif
+                        </div>
+
+                    </div>
+                </td>
                     <td>
                         <div class="d-flex">
-                            <a href="{{ route('department.edit', ['department' => $department->id]) }}">
+                            <a href="{{ route('student.edit', ['student' => $student->id]) }}">
                                 <button class="bg-success text-white btn">Edit</button>
                             </a>
                             <button type="button" class="ml-2 bg-danger text-white btn" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal{{ $department->id }}">
+                                    data-bs-target="#exampleModal{{ $student->id }}">
                                 Delete
                             </button>
-                            <div class="modal fade" id="exampleModal{{ $department->id }}" tabindex="-1"
-                                 aria-labelledby="exampleModalLabel{{ $department->id }}" aria-hidden="true">
+                            <div class="modal fade" id="exampleModal{{ $student->id }}" tabindex="-1"
+                                 aria-labelledby="exampleModalLabel{{ $student->id }}" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel{{ $department->id }}">
-                                                Delete {{$department->name}}</h1>
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel{{ $student->id }}">
+                                                Delete {{$student->name}}</h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                         </div>
@@ -71,7 +87,7 @@
                                                 Close
                                             </button>
                                             <form
-                                                action="{{ route('department.destroy', ['department' => $department->id]) }}"
+                                                action="{{ route('student.destroy', ['student' => $student->id]) }}"
                                                 method="POST">
                                                 @csrf
                                                 @method('DELETE')
@@ -84,13 +100,12 @@
 
                         </div>
                     </td>
-                @endif
             </tr>
         @endforeach
         </tbody>
     </table>
     <div class="mb-5">
-        {{ $departments->links('vendor.pagination.bootstrap-5') }}
+        {{ $students->links('vendor.pagination.bootstrap-5') }}
     </div>
 
 @endsection
