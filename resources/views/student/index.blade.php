@@ -39,6 +39,7 @@
         </tr>
         </thead>
         <tbody>
+
         @foreach($students as $student)
             <tr>
                 <th scope="row">{{$student->id}}</th>
@@ -46,7 +47,11 @@
                 <td>{{$student->user->full_name}}</td>
                 <td>{{$student->user->email}}</td>
                 <td>{{$student->student_code}}</td>
-                <td><img src="{{$student->image}}" class="h-50 w-50"></td>
+                <td>@if($student->image)
+                        <img class="h-50 w-50" src="{{ asset('avatars/' . $student->image) }}" alt="Avatar">
+                    @else
+                        <p>No avatar</p>
+                    @endif</td>
                 <td>{{$student->birth_date}}</td>
                 <td><div class="d-flex">
                         <div>

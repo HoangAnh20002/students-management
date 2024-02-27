@@ -19,7 +19,7 @@
                     @method('put')
                     <input type="hidden" name="id" value="{{ $department->id }}">
                     <label for="name">Department Name:</label>
-                    <input type="text" name="name" value="{{ $department->name }}" required maxlength="255">
+                    <input type="text" name="name" value="{{ $department->name }}" required maxlength="255"  value="{{ old('name') ? old('name') : '' }}">
                     <br/>
                     <button class="btn btn-primary mt-3" type="submit">Update</button>
                     <button type="button" class="mt-3 ml-2 bg-danger  rounded text-white btn" data-bs-toggle="modal"

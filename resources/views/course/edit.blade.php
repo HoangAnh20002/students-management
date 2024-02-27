@@ -19,13 +19,15 @@
                     @method('put')
                     <input type="hidden" name="id" value="{{ $course->id }}">
                     <label for="name">Course Name:</label>
-                    <input type="text" name="name" value="{{ $course->name }}" required maxlength="255">
+                    <input type="text" name="name" value="{{ $course->name }}" required maxlength="255" value="{{ old('name') ? old('name') : '' }}">
                     <br/>
                     <label class="mt-3" for="departments">Departments:</label><br/>
+                    <label class="mt-3">Departments:</label><br/>
                     @foreach($departments as $department)
-                        <input type="checkbox" name="departments[]" value="{{ $department->id }}" {{ in_array($department->id, $course->department->pluck('id')->toArray()) ? 'checked' : '' }}>
-                        <label for="departments">{{ $department->name }}</label><br/>
+                        <input type="checkbox" id="department_{{ $department->id }}" name="departments[]" value="{{ $department->id }}" {{ $course->department->contains($department->id) ? 'checked' : '' }}>
+                        <label for="department_{{ $department->id }}">{{ $department->name }}</label><br/>
                     @endforeach
+
                     <br/>
                     <button class="btn btn-primary mt-3" type="submit">Update</button>
                     <button type="button" class="mt-3 ml-2 bg-danger  rounded text-white btn" data-bs-toggle="modal"

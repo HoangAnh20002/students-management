@@ -2,23 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\Base;
+use App\Http\Requests\StudentRequest;
 use App\Repositories\CourseRepository;
+use App\Repositories\DepartmentRepository;
 use App\Repositories\StudentRepository;
 use App\Repositories\UserRepository;
-use Illuminate\Support\Facades\Auth;
+
 
 class StudentController extends Controller
 {
     protected $studentRepository;
     protected $userRepository;
     protected $courseRepository;
+    protected $departmentRepository;
 
-    public function __construct(StudentRepository $studentRepository,UserRepository $userRepository,CourseRepository $courseRepository)
+    public function __construct(StudentRepository $studentRepository,UserRepository $userRepository,CourseRepository $courseRepository,DepartmentRepository $departmentRepository)
     {
         $this->studentRepository = $studentRepository;
         $this->userRepository = $userRepository;
         $this->courseRepository = $courseRepository;
+        $this->departmentRepository = $departmentRepository;
     }
     public function index()
     {
@@ -32,22 +35,30 @@ class StudentController extends Controller
      */
     public function create()
     {
-        $students = $this->studentRepository->all();
-
-        return view('student.create', compact('students'));
+        $departments = $this->departmentRepository->all();
+        $courses = $this->courseRepository->all();
+        return view('student.create', compact('departments','courses'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CourseRequest $request)
+    public function store(StudentRequest $request)
     {
+        $file_name = null;
+        if($request->hasFile('avatar')){
+            $file = $request->avatar;
+            $file_name =$file->getClientOriginalName();
+            $file->move(public_path('avatars'),$file_name);
+        }
+        $request->merge(['image'=>$file_name]);
+        $student = $this->studentRepository->createWithUser($request->only('name','full_name','email','password','student_code','birth_date','image','department_id','courses'));
 
-        $data = $request->only('name');
-        $departmentIds = $request->input('departments');
-        $this->courseRepository->createWithDepartments($data, $departmentIds);
-
-        return redirect('course')->with('success', 'Course added successfully');
+        if ($student) {
+            return redirect()->route('student.index')->with('success', 'Student created successfully');
+        } else {
+            return redirect()->back()->with('error', 'Failed to create student');
+        }
     }
 
     /**
@@ -63,25 +74,22 @@ class StudentController extends Controller
      */
     public function edit($id)
     {
-        $role = Auth::user()->role;
         $departments = $this->departmentRepository->all();
-        if ($role == Base::STUDENT) {
-            return redirect('login')->with('error', 'Permission denied. Please log in with a valid account.');
+        $courses = $this->courseRepository->all();
+
+        $student = $this->studentRepository->getInfoStudentAndUser()->find($id);
+        if (!$student) {
+            return redirect('$students')->with('error', 'Students not found');
         }
 
-        $course = $this->courseRepository->find($id);
-        if (!$course) {
-            return redirect('course')->with('error', 'Course not found');
-        }
-
-        return view('course.edit', compact('course', 'role', 'departments'));
+        return view('student.edit', compact('courses', 'student', 'departments'));
     }
 
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(CourseRequest $request, $id)
+    public function update(StudentRequest $request, $id)
     {
         $data = $request->only('name');
         $departmentIds = $request->input('departments');
@@ -96,10 +104,7 @@ class StudentController extends Controller
      */
     public function destroy($id)
     {
-        if ($this->courseRepository->hasStudents($id)) {
-            return redirect()->route('course.index')->with('error', 'This course has student records and cannot be deleted.');
-        }
-        $record = $this->courseRepository->find($id);
+        $record = $this->studentRepository->find($id);
         if ($record) {
             $record->delete();
             return redirect()->route('course.index')->with('success', 'Record deleted successfully');

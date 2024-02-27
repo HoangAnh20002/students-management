@@ -56,7 +56,7 @@ Breadcrumbs::register('studentCreate',function ($breadcrumbs){
     $breadcrumbs->parent('student');
     $breadcrumbs->push('Create',route('student.create'));
 });
-Breadcrumbs::register('studentEdit',function ($breadcrumbs){
+Breadcrumbs::register('studentEdit',function ($breadcrumbs, $student){
     $breadcrumbs->parent('student');
-    $breadcrumbs->push('Edit',route('student.edit'));
+    $breadcrumbs->push('Edit',route('student.edit',$student));
 });

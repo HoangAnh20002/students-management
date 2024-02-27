@@ -34,7 +34,7 @@ class StudentSeeder extends Seeder
                 'department_id' => $department->id,
                 'student_code' => $faker->randomNumber(8),
                 'birth_date' => $faker->date,
-                'image' => $faker->imageUrl,
+                'image' => null,
             ]);
         }
     }

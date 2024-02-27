@@ -16,11 +16,10 @@
             <form action="{{ route('course.store') }}" method="post">
                 @csrf
                 <label for="name">Name:</label>
-                <input type="text" name="name" id="name" required maxlength="255"><br/>
-
+                <input type="text" name="name" id="name" required maxlength="255" value="{{ old('name') ? old('name') : '' }}"><br/>
                 <label class="mt-3">Departments:</label><br/>
                 @foreach($departments as $department)
-                    <input type="checkbox" id="department_{{ $department->id }}" name="departments[]" value="{{ $department->id }}">
+                    <input type="checkbox" id="department_{{ $department->id }}" name="departments[]" value="{{ $department->id }}" {{ in_array($department->id, old('departments', [])) ? 'checked' : '' }}>
                     <label for="department_{{ $department->id }}">{{ $department->name }}</label><br/>
                 @endforeach
 

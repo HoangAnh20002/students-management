@@ -11,7 +11,7 @@ class Student extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $fillable = ['user_id','department_id','student_code','birth_date'];
+    protected $fillable = ['user_id','department_id','student_code','image','birth_date'];
 
     public function user(){
         return $this->belongsTo(User::class);
