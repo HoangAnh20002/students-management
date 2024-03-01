@@ -4,7 +4,7 @@
 @endphp
 @extends('layouts.home')
 @section('content')
-        {{\DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs::render('student')}}
+    {{\DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs::render('student')}}
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
@@ -15,56 +15,71 @@
             {{session('error')}}
         </div>
     @endif
-
+<style>
+    .name{
+        max-width:150px;
+        color: #0079c1;
+        height: 2em;
+        text-overflow: ellipsis;
+        cursor: pointer;
+        word-break: break-all;
+        overflow:hidden;
+        white-space: nowrap;
+    }
+    .name:hover{
+        overflow: visible;
+        white-space: normal;
+        height:auto;
+    }
+</style>
     <form method="GET" action="{{ route('student.create') }}">
         <div class="d-flex mt-3 justify-content-around">
             <h2>Student List</h2>
-                <div>
-                    <button class="bg-primary text-white btn" type="submit">Create</button>
-                </div>
+            <div>
+                <button class="bg-primary text-white btn" type="submit">Create</button>
+            </div>
         </div>
     </form>
-    <table class="table mt-3 shadow border w-100">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Full Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Student Code</th>
-            <th scope="col">Image</th>
-            <th scope="col">Birth date</th>
-            <th scope="col">Course registered</th>
-            <th scope="col">Action</th>
-        </tr>
-        </thead>
-        <tbody>
-
-        @foreach($students as $student)
+    <div class="table-responsive">
+        <table class="table mt-3 shadow border w-100">
+            <thead>
             <tr>
-                <th scope="row">{{$student->id}}</th>
-                <td>{{$student->user->name}}</td>
-                <td>{{$student->user->full_name}}</td>
-                <td>{{$student->user->email}}</td>
-                <td>{{$student->student_code}}</td>
-                <td>@if($student->image)
-                        <img class="h-50 w-50" src="{{ asset('avatars/' . $student->image) }}" alt="Avatar">
-                    @else
-                        <p>No avatar</p>
-                    @endif</td>
-                <td>{{$student->birth_date}}</td>
-                <td><div class="d-flex">
-                        <div>
-                            {{$student->course_count}}
-                        </div>
-                        <div>
-                            @if($student->course_count != $course_sum)
-                                <button class="btn bg-success ml-3 text-white">Notice</button>
-                            @endif
-                        </div>
+                <th scope="col">#</th>
+                <th scope="col">Full Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Student Code</th>
+                <th scope="col">Image</th>
+                <th scope="col">D.O.B</th>
+                <th scope="col">Course registered</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
 
-                    </div>
-                </td>
+            <tbody>
+            @foreach($students as $student)
+                <tr>
+                    <th scope="row">{{$student->id}}</th>
+                    <td class="name">{{$student->user->full_name}}</td>
+                    <td class="name">{{$student->user->email}}</td>
+                    <td>{{$student->student_code}}</td>
+                    <td>@if($student->image)
+                            <img class="h-50 w-50" src="{{ asset('avatars/' . $student->image) }}" alt="Avatar">
+                        @else
+                            <p>No avatar</p>
+                        @endif</td>
+                    <td>{{ \Carbon\Carbon::parse($student->birth_date)->format('d/m/Y') }}</td>
+                    <td>
+                        <div class="d-flex">
+                            <div>
+                                {{$student->course->count('course')}}
+                            </div>
+                            <div>
+                                @if($student->course->count('course') < $student->department->course->count('course'))
+                                    <button class="btn bg-success ml-3 text-white">Notice</button>
+                                @endif
+                            </div>
+                        </div>
+                    </td>
                     <td>
                         <div class="d-flex">
                             <a href="{{ route('student.edit', ['student' => $student->id]) }}">
@@ -105,12 +120,12 @@
 
                         </div>
                     </td>
-            </tr>
-        @endforeach
-        </tbody>
-    </table>
-    <div class="mb-5">
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    </div>
+    <div class="mb-5 mt-5">
         {{ $students->links('vendor.pagination.bootstrap-5') }}
     </div>
-
 @endsection
