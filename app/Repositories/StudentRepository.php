@@ -1,10 +1,12 @@
 <?php
 namespace App\Repositories;
 use App\Enums\Base;
+use App\Mail\StudentCreated;
 use App\Models\Department;
 use App\Models\User;
 use App\Repositories\Interfaces\StudentRepositoryInterface;
 use App\Models\Student;
+use Illuminate\Support\Facades\Mail;
 
 class StudentRepository extends BaseRepository implements StudentRepositoryInterface
 {
@@ -16,10 +18,6 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
     {
         return $this->model = app()->make(Student::class);
     }
-    public function getInfoStudentAndUser()
-    {
-        return $this->model->with('user')->get();
-    }
     public function createWithUser(array $data)
     {
         $department = Department::findOrFail($data['department_id']);
@@ -29,17 +27,19 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
             'password' => bcrypt($data['password']),
             'role' => '0',
         ]);
-
             $student = $this->model->create([
                 'user_id' => $user->id,
                 'student_code' =>'',
                 'image' => $data['image'],
-                'birth_date' => $data['birth_date'],
+                'date_of_birth' => $data['date_of_birth'],
                 'department_id' => $data['department_id'],
             ]);
         $student->student_code = "AP" . "-" . strtoupper(substr($department->name, 0, 2)) . "-" . $student->id;
         $student->save();
         $student->course()->attach($data['courses']);
+        $password = $data['password'];
+        Mail::to($user->email)->send(new StudentCreated($user->full_name, $password));
+
         return $student;
     }
     public function updateStudent(array $data, $id, $departmentId, $courseIds)
@@ -50,12 +50,11 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
             'full_name' => $data['full_name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'role' => '0',
+            'role' => Base::ADMIN,
         ]);
         $student->update([
-            'student_code' => $data['student_code'],
             'image' => $data['image'],
-            'birth_date' => $data['birth_date'],
+            'date_of_birth' => $data['date_of_birth'],
             'department_id' => $departmentId,
         ]);
 

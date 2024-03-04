@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedInteger('department_id',);
             $table->string('student_code',20);
             $table->string('image',255)->nullable();
-            $table->date('birth_date');
+            $table->date('date_of_birth');
             $table->timestamps();
             $table->softDeletes();
         });

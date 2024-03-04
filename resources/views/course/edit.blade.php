@@ -18,16 +18,27 @@
                     @csrf
                     @method('put')
                     <input type="hidden" name="id" value="{{ $course->id }}">
-                    <label for="name">Course Name:</label>
-                    <input type="text" name="name" value="{{ $course->name }}" required maxlength="255" value="{{ old('name') ? old('name') : '' }}">
+                    <div class="form-floating mb-3">
+                        <input type="name" class="form-control" id="name" name="name"
+                               placeholder="name" required maxlength="255" value="{{ old('name') ?? $course->name  }}">
+                        <label for="email">Name</label>
+                    </div>
                     <br/>
-                    <label class="mt-3" for="departments">Departments:</label><br/>
-                    <label class="mt-3">Departments:</label><br/>
-                    @foreach($departments as $department)
-                        <input type="checkbox" id="department_{{ $department->id }}" name="departments[]" value="{{ $department->id }}" {{ $course->department->contains($department->id) ? 'checked' : '' }}>
-                        <label for="department_{{ $department->id }}">{{ $department->name }}</label><br/>
-                    @endforeach
-
+                    <div class="container-fluid h-100 bg-light text-dark">
+                        <div class="mt-3">
+                            Select Multiple Departments
+                        </div>
+                        <br>
+                                <div >
+                                    <select class="mul-select w-100" multiple="true" id="department_select" name="departments[]">
+                                        @foreach($departments as $department)
+                                            <option value="{{ $department->id }}" {{ in_array($department->id, old('departments', $course->department->pluck('id')->toArray())) ? 'selected' : '' }}>
+                                                {{ $department->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                        </div>
                     <br/>
                     <button class="btn btn-primary mt-3" type="submit">Update</button>
                     <button type="button" class="mt-3 ml-2 bg-danger  rounded text-white btn" data-bs-toggle="modal"
@@ -66,5 +77,14 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function(){
+            $(".mul-select").select2({
+                placeholder: "Select course",
+                tags: true,
+                tokenSeparators: ['/',',',';'," "]
+            });
+        })
+    </script>
 @endsection
 

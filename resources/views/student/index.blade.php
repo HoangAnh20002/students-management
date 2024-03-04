@@ -62,12 +62,13 @@
                     <td class="name">{{$student->user->full_name}}</td>
                     <td class="name">{{$student->user->email}}</td>
                     <td>{{$student->student_code}}</td>
-                    <td>@if($student->image)
+                    <td style="max-width: 200px">@if($student->image)
                             <img class="h-50 w-50" src="{{ asset('avatars/' . $student->image) }}" alt="Avatar">
                         @else
                             <p>No avatar</p>
-                        @endif</td>
-                    <td>{{ \Carbon\Carbon::parse($student->birth_date)->format('d/m/Y') }}</td>
+                        @endif
+                    </td>
+                    <td>{{ \Carbon\Carbon::parse($student->date_of_birth)->format('d/m/Y') }}</td>
                     <td>
                         <div class="d-flex">
                             <div>

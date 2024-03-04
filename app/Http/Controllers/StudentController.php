@@ -56,7 +56,7 @@ class StudentController extends Controller
             $file->move(public_path('avatars'), $file_name);
         }
         $request->merge(['image' => $file_name]);
-        $student = $this->studentRepository->createWithUser($request->only('name', 'full_name', 'email', 'password', 'student_code', 'birth_date', 'image', 'department_id', 'courses'));
+        $student = $this->studentRepository->createWithUser($request->only('name', 'full_name', 'email', 'password', 'student_code', 'date_of_birth', 'image', 'department_id', 'courses'));
 
         if ($student) {
             return redirect()->route('student.index')->with('success', 'Student created successfully');
@@ -85,7 +85,6 @@ class StudentController extends Controller
         $departments = $this->departmentRepository->all();
         $courses = $this->courseRepository->all();
 
-        $student = $this->studentRepository->getInfoStudentAndUser()->find($id);
         if (!$student) {
             return redirect('students')->with('error', 'Student not found');
         }
@@ -114,7 +113,7 @@ class StudentController extends Controller
             $file_name = $old_image;
         }
         $request->merge(['image' => $file_name]);
-        $data = $request->only(['name', 'full_name', 'email', 'student_code', 'password', 'image', 'birth_date']);
+        $data = $request->only(['name', 'full_name', 'email', 'student_code', 'password', 'image', 'date_of_birth']);
         $departmentId = $request->input('department_id');
         $courseIds = $request->input('courses');
         $this->studentRepository->updateStudent($data, $id, $departmentId, $courseIds);

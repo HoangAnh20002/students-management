@@ -21,16 +21,23 @@ class StudentRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+         $rules =[
             'full_name' => 'required|string|max:255|regex:/^[a-zA-Z0-9]*$/',
             'email' => 'required|email|max:255',
-            'password' => 'required|string|min:8|max:16',
             'image' => 'nullable|ends_with:.jpg,.png',
-            'birth_date' => 'required|date',
+            'date_of_birth' => 'required|date',
             'courses' => 'required|array|min:1',
             'courses.*' => 'integer|exists:courses,id',
             'department_id' => 'required|exists:departments,id',
         ];
+
+        if ($this->isMethod('post')) {
+            $rules['password'] = 'required|string|min:8|max:16';
+        } else {
+            $rules['password'] = 'nullable|string|min:8|max:16';
+        }
+
+        return $rules;
     }
     public function messages()
     {
