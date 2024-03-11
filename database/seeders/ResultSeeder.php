@@ -17,15 +17,21 @@ class ResultSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        for ($i = 0; $i < 100; $i++) {
-            $student = Student::inRandomOrder()->first();
-            $course = Course::inRandomOrder()->first();
+        $students = Student::all();
+        $courses = Course::all();
 
-            Result::create([
-                'student_id' => $student->id,
-                'course_id' => $course->id,
-                'mark' => $faker->randomFloat(2, 0, 10),
-            ]);
+        foreach ($students as $student) {
+            $selectedCourses = $courses->random(rand(1, 4));
+
+            foreach ($selectedCourses as $course) {
+                Result::create([
+                    'student_id' => $student->id,
+                    'course_id' => $course->id,
+                    'mark' => $faker->randomFloat(2, 0, 10),
+                ]);
+            }
         }
     }
+
+
 }

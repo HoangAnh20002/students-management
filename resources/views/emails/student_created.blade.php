@@ -5,7 +5,7 @@
 
 <p>Your login credentials:</p>
 <ul>
-    <li><strong>Login Mail:</strong> Your mail</li>
+    <li><strong>Login Mail:</strong> {{$email}}</li>
     <li><strong>Password:</strong> {{ $password }}</li>
 </ul>
 

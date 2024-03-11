@@ -22,7 +22,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
 
     public function all()
     {
-        return $this->model->all();
+        return $this->model->orderBy('id', 'desc')->get();
     }
 
     public function find($id)
@@ -48,16 +48,6 @@ abstract class BaseRepository implements BaseRepositoryInterface
 
     public function paginate($page)
     {
-        return $this->model->paginate($page);
-    }
-
-    public function findSoftDelete($id)
-    {
-        $record = $this->model->withTrashed()->find($id);
-
-        if ($record && $record->deleted_at !== null) {
-            return null;
-        }
-        return $record;
+        return $this->model->orderBy('id', 'desc')->paginate($page);
     }
 }

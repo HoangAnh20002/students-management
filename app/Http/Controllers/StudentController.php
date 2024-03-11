@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Base;
+use App\Http\Requests\SearchRequest;
 use App\Http\Requests\StudentRequest;
 use App\Repositories\CourseRepository;
 use App\Repositories\DepartmentRepository;
@@ -18,7 +19,7 @@ class StudentController extends Controller
     protected $departmentRepository;
 
     public function __construct(StudentRepository $studentRepository, UserRepository $userRepository,
-                                CourseRepository $courseRepository, DepartmentRepository $departmentRepository)
+                                CourseRepository  $courseRepository, DepartmentRepository $departmentRepository)
     {
         $this->studentRepository = $studentRepository;
         $this->userRepository = $userRepository;
@@ -26,10 +27,24 @@ class StudentController extends Controller
         $this->departmentRepository = $departmentRepository;
     }
 
-    public function index()
+    public function index(SearchRequest $request)
     {
         $course_sum = $this->courseRepository->getTotalCoures();
-        $students = $this->studentRepository->paginate(Base::STUDENT);
+        if ($request->hasAny(['result_from', 'result_to', 'age_from', 'age_to'])) {
+            $resultFrom = $request->input('result_from');
+            $resultTo = $request->input('result_to');
+            $ageFrom = $request->input('age_from');
+            $ageTo = $request->input('age_to');
+            $students = $this->studentRepository->search($resultFrom, $resultTo, $ageFrom, $ageTo);
+            if ($students->isEmpty()) {
+                return redirect()->back()->with('error', 'Student not found');
+            }
+        } else {
+            $students = $this->studentRepository->paginate(Base::STUDENT);
+        }
+        foreach ($students as $student) {
+            $student->average_score = $this->studentRepository->calculateAverageScore($student);
+        }
         return view('student.index', compact('students', 'course_sum'));
     }
 
@@ -51,12 +66,14 @@ class StudentController extends Controller
 
         $file_name = null;
         if ($request->hasFile('avatar')) {
-            $file = $request->avatar;
+            $file = $request->file('avatar');
             $file_name = $file->getClientOriginalName();
-            $file->move(public_path('avatars'), $file_name);
+            $file->storeAs('avatars', $file_name, 'public');
         }
+
         $request->merge(['image' => $file_name]);
         $student = $this->studentRepository->createWithUser($request->only('name', 'full_name', 'email', 'password', 'student_code', 'date_of_birth', 'image', 'department_id', 'courses'));
+
 
         if ($student) {
             return redirect()->route('student.index')->with('success', 'Student created successfully');
@@ -80,14 +97,10 @@ class StudentController extends Controller
     {
         $student = $this->studentRepository->find($id);
         if (!$student) {
-            return redirect('course')->with('error', 'Student not found');
+            return redirect('student.index')->with('error', 'Student not found');
         }
         $departments = $this->departmentRepository->all();
         $courses = $this->courseRepository->all();
-
-        if (!$student) {
-            return redirect('students')->with('error', 'Student not found');
-        }
 
         return view('student.edit', compact('courses', 'student', 'departments'));
     }
@@ -106,7 +119,7 @@ class StudentController extends Controller
         if ($request->file('avatar')) {
             $file = $request->avatar;
             $file_name = $file->getClientOriginalName();
-            $file->move(public_path('avatars'), $file_name);
+            $file->storeAs('avatars', $file_name, 'public');
 
         } else {
             $old_image = $student->image;
@@ -126,7 +139,7 @@ class StudentController extends Controller
      */
     public function destroy($id)
     {
-        $student = $this->studentRepository->findSoftDelete($id);
+        $student = $this->studentRepository->find($id);
 
         if (!$student) {
             return redirect()->route('student.index')->with('error', 'Record not found');

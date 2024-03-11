@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Carbon;
 
 class StudentRequest extends FormRequest
 {
@@ -23,9 +24,22 @@ class StudentRequest extends FormRequest
     {
          $rules =[
             'full_name' => 'required|string|max:255|regex:/^[a-zA-Z0-9]*$/',
-            'email' => 'required|email|max:255',
+            'email' => 'required|unique:users|email|max:255',
             'image' => 'nullable|ends_with:.jpg,.png',
-            'date_of_birth' => 'required|date',
+             'date_of_birth' => [
+                 'required',
+                 'date',
+                 function ($attribute, $value, $fail) {
+                     $today = now();
+                     if ($value > $today) {
+                         $fail('The date of birth must not be a future date.');
+                     }
+                     $dob = Carbon::createFromFormat('Y-m-d', $value);
+                     if ($dob->age < 16) {
+                         $fail('The person must be at least 16 years old.');
+                     }
+                 },
+             ],
             'courses' => 'required|array|min:1',
             'courses.*' => 'integer|exists:courses,id',
             'department_id' => 'required|exists:departments,id',
@@ -38,6 +52,7 @@ class StudentRequest extends FormRequest
         }
 
         return $rules;
+
     }
     public function messages()
     {
@@ -49,6 +64,7 @@ class StudentRequest extends FormRequest
             'email.required' => 'Email is required',
             'email.email' => 'Invalid email format',
             'email.max' => 'Email must not exceed 255 characters',
+            'email.unique' => 'Email already exit',
             'password.required' => 'Password is required',
             'password.string' => 'Password must be a string',
             'password.min' => 'Password must be at least 8 characters',

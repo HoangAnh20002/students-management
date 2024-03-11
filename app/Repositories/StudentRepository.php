@@ -6,6 +6,7 @@ use App\Models\Department;
 use App\Models\User;
 use App\Repositories\Interfaces\StudentRepositoryInterface;
 use App\Models\Student;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Mail;
 
 class StudentRepository extends BaseRepository implements StudentRepositoryInterface
@@ -38,7 +39,7 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
         $student->save();
         $student->course()->attach($data['courses']);
         $password = $data['password'];
-        Mail::to($user->email)->send(new StudentCreated($user->full_name, $password));
+        Mail::to($user->email)->send(new StudentCreated($user->full_name,$user->email, $password));
 
         return $student;
     }
@@ -65,5 +66,59 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
         $student = $this->model->findOrFail($id);
         $student->user()->delete();
         $student->delete();
+    }
+    public function calculateAverageScore(Student $student)
+    {
+        $totalMarks = 0;
+        $totalCourses = $student->course->count();
+        if ($totalCourses > 0) {
+            foreach ($student->course as $course) {
+                $result = $course->result;
+                if ($result) {
+                    $totalMarks += $result->mark;
+                }
+            }
+            return $totalMarks / $totalCourses;
+        } else {
+            return null;
+        }
+    }
+
+    public function search($resultFrom, $resultTo, $ageFrom, $ageTo)
+    {
+        $students = $this->model->with('course.result')->get();
+        $filteredStudents = $students->filter(function ($student) use ($resultFrom, $resultTo, $ageFrom, $ageTo) {
+            $totalMarks = 0;
+            $totalCourses = $student->course->count();
+            foreach ($student->course as $course) {
+                $result = $course->result;
+                if ($result) {
+                    $totalMarks += $result->mark;
+                }
+            }
+            $averageScore = $totalCourses > 0 ? $totalMarks / $totalCourses : 0;
+            if($resultFrom == !null && $resultTo == null || $resultFrom > $resultTo){
+                return redirect()->route('student.index')->with('error','The result to must be greater than or equal to the result from.');
+            }
+            if($ageFrom == !null && $ageTo == null || $ageFrom > $ageTo){
+                return redirect()->route('student.index')->with('error','The age to must be greater than or equal to the age from.');
+            }
+            if($resultTo == null && $resultFrom == null){
+                return  $student->date_of_birth >= now()->subYears($ageTo) &&
+                    $student->date_of_birth <= now()->subYears($ageFrom);
+            }
+            elseif($ageFrom == null && $ageTo == null){
+                return $averageScore >= $resultFrom && $averageScore <= $resultTo;
+            }
+            return $averageScore >= $resultFrom && $averageScore <= $resultTo &&
+                $student->date_of_birth >= now()->subYears($ageTo) &&
+                $student->date_of_birth <= now()->subYears($ageFrom);
+        });
+
+        $perPage = Base::PAGE;
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $pagedData = $filteredStudents->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $students = new LengthAwarePaginator($pagedData, count($filteredStudents), $perPage, $currentPage);
+        return $students;
     }
 }

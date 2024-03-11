@@ -49,8 +49,8 @@
                         </div>
                         <div class="form-floating mb-3">
                             <input type="date" class="form-control" id="date_of_birth" name="date_of_birth"
-                                   placeholder="Birth date" required value="{{ old('date_of_birth')}}">
-                            <label for="date_of_birth">Birth date</label>
+                                   placeholder="Date of birth" required value="{{ old('date_of_birth')}}">
+                            <label for="date_of_birth">Date of birth</label>
                         </div>
                     </div>
                     <div class="col-4">
@@ -67,11 +67,11 @@
                     </div>
                     <div class="col-4">
                         <div class="container-fluid bg-light text-dark">
-                                <div class="mt-3 ml-2">Courses:</div>
-                            <div class="justify-content-center align-items-center mt-2 h-100">
+                                <label class="mt-3 ml-2 custom-label" for="courses_select">Courses:</label>
+                            <div class="justify-content-center align-items-center mt-1 h-100">
                                 <div class="col">
                                     <div class="form-group">
-                                        <select class="mul-select w-100" multiple="true" name="courses[]">
+                                        <select class="mul-select w-100" id="courses_select" multiple="true" name="courses[]">
                                             @foreach($courses as $course)
                                                 <option value="{{ $course->id }}" {{ in_array($course->id, old('courses', [])) ? 'selected' : '' }}>
                                                     {{ $course->name }}

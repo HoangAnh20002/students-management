@@ -47,7 +47,6 @@ class CourseController extends Controller
         $data = $request->only('name');
         $departmentIds = $request->input('departments');
         $this->courseRepository->createWithDepartments($data, $departmentIds);
-
         return redirect('course')->with('success', 'Course added successfully');
     }
 
@@ -74,11 +73,6 @@ class CourseController extends Controller
         if (!$course) {
             return redirect('course')->with('error', 'Course not found');
         }
-        $course = $this->courseRepository->findSoftDelete($id);
-        if (!$course) {
-            return redirect('course')->with('error', 'The record not found');
-        }
-
         return view('course.edit', compact('course', 'role', 'departments'));
     }
 

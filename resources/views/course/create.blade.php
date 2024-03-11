@@ -21,19 +21,20 @@
                     <label for="email">Name</label>
                 </div>
                 <div class="h-100 bg-light text-dark">
-                    <div class="mt-3">
+                    <label for="department_select" class="mt-3 ">
                         Department:
-                    </div>
+                    </label>
                     <br>
-                            <div class="form-group">
-                                <select class="mul-select w-100" multiple="true" id="department_select" name="departments[]">
-                                    @foreach($departments as $department)
-                                        <option value="{{ $department->id }}" {{ in_array($department->id, old('department_ids', [])) ? 'selected' : '' }}>
-                                            {{ $department->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                    <div class="form-group">
+                        <select class="mul-select w-100" multiple="true" id="department_select" name="departments[]">
+                            @foreach($departments as $department)
+                                <option
+                                    value="{{ $department->id }}" {{ in_array($department->id, old('department_ids', [])) ? 'selected' : '' }}>
+                                    {{ $department->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
                 <button class="ml-5 mt-3 px-3 bg-primary text-white btn" type="submit">Submit</button>
                 <a class="btn btn-secondary mt-3 ml-2" href="{{ url()->previous() }}">Cancel</a>

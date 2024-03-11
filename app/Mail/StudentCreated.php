@@ -16,9 +16,10 @@ class StudentCreated extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct($name,$password)
+    public function __construct($name,$email,$password)
     {
         $this->student_name = $name;
+        $this->email = $email;
         $this->password = $password;
     }
 
@@ -38,6 +39,7 @@ class StudentCreated extends Mailable
             ->subject('Student Created')
             ->with([
                 'student_name' => $this->student_name,
+                'email' => $this->email,
                 'password' => $this->password,
             ]);
     }

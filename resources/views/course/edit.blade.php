@@ -25,20 +25,22 @@
                     </div>
                     <br/>
                     <div class="container-fluid h-100 bg-light text-dark">
-                        <div class="mt-3">
-                            Select Multiple Departments
-                        </div>
+                        <label for="department_select" class="mt-3">
+                            Departments
+                        </label>
                         <br>
-                                <div >
-                                    <select class="mul-select w-100" multiple="true" id="department_select" name="departments[]">
-                                        @foreach($departments as $department)
-                                            <option value="{{ $department->id }}" {{ in_array($department->id, old('departments', $course->department->pluck('id')->toArray())) ? 'selected' : '' }}>
-                                                {{ $department->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                        <div>
+                            <select class="mul-select w-100" multiple="true" id="department_select"
+                                    name="departments[]">
+                                @foreach($departments as $department)
+                                    <option
+                                        value="{{ $department->id }}" {{ in_array($department->id, old('departments', $course->department->pluck('id')->toArray())) ? 'selected' : '' }}>
+                                        {{ $department->name }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
+                    </div>
                     <br/>
                     <button class="btn btn-primary mt-3" type="submit">Update</button>
                     <button type="button" class="mt-3 ml-2 bg-danger  rounded text-white btn" data-bs-toggle="modal"
@@ -78,11 +80,11 @@
         </div>
     </div>
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
             $(".mul-select").select2({
                 placeholder: "Select course",
                 tags: true,
-                tokenSeparators: ['/',',',';'," "]
+                tokenSeparators: ['/', ',', ';', " "]
             });
         })
     </script>

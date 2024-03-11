@@ -43,7 +43,7 @@
                         <div>
                             <div>Current avatar:</div>
                             @if($student->image)
-                                <img class="h-50 w-50" src="{{ asset('avatars/' . $student->image) }}" alt="Avatar">
+                                <img class="h-50 w-50" src="{{ asset('storage/avatars/'.$student->image) }}" alt="Avatar">
                             @else
                                 <p>No avatar</p>
                             @endif
@@ -79,11 +79,11 @@
                     </div>
                     <div class="col-4">
                             <div class="container-fluid h-100 bg-light text-dark">
-                                    <div class="mt-3">Courses:</div>
+                                    <label class="mt-3" for="course_id">Courses:</label>
                                 <br>
                                 <div class="justify-content-center align-items-center h-100">
                                         <div class="form-group">
-                                            <select class="mul-select" multiple="true" style="width:120px" name="courses[]">
+                                            <select id="course_id" class="mul-select" multiple="true" style="width:120px" name="courses[]">
                                                 @foreach($courses as $course)
                                                     <option value="{{ $course->id }}" {{ in_array($course->id, old('courses', $student->course->pluck('id')->toArray())) ? 'selected' : '' }}>
                                                         {{ $course->name }}
@@ -176,4 +176,3 @@
         }
     </script>
 @endsection
-
