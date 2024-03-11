@@ -69,22 +69,22 @@
                     <div class="search_box">
                         <label for="result_from">Result From:</label>
                         <input type="number" id="result_from" class="form-control" name="result_from" min="0"
-                               value="{{ request()->input('result_from') !== null ? request()->input('result_from') : old('result_from') }}">
+                        value="{{ old('result_from') ?? (request()->input('result_from') !== '' ? request()->input('result_from') : '') }}">
                     </div>
                     <div class="search_box">
                         <label for="result_to">Result To:</label>
                         <input type="number" id="result_to" class="form-control" name="result_to" min="0"
-                               value="{{ request()->input('result_to') !== null ? request()->input('result_to') : old('result_to') }}">
+                               value="{{ old('result_to') ?? (request()->input('result_to') !== '' ? request()->input('result_to') : '') }}">
                     </div>
                     <div class="search_box">
                         <label for="age_from">Age From:</label>
                         <input type="number" id="age_from" class="form-control" name="age_from" min="0"
-                               value="{{ request()->input('age_from') !== null ? request()->input('age_from') : old('age_from') }}">
+                               value="{{ old('age_from') ?? (request()->input('age_from') !== '' ? request()->input('age_from') : '') }}">
                     </div>
                     <div class="search_box">
                         <label for="age_to">Age To:</label>
                         <input type="number" id="age_to" class="form-control" name="age_to" min="0"
-                               value="{{ request()->input('age_to') !== null ? request()->input('age_to') : old('age_to') }}">
+                               value="{{ old('age_to') ?? (request()->input('age_to') !== '' ? request()->input('age_to') : '') }}">
                     </div>
                 </div>
                 <button type="submit" class="btn btn-success mt-2">Search</button>
