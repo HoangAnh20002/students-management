@@ -48,3 +48,15 @@ Breadcrumbs::register('courseEdit', function ($breadcrumbs, $course) {
     $breadcrumbs->parent('course');
     $breadcrumbs->push('Edit', route('course.edit', $course));
 });
+Breadcrumbs::register('student',function ($breadcrumbs){
+    $breadcrumbs->parent('home_ad');
+    $breadcrumbs->push('Student',route('student.index'));
+});
+Breadcrumbs::register('studentCreate',function ($breadcrumbs){
+    $breadcrumbs->parent('student');
+    $breadcrumbs->push('Create',route('student.create'));
+});
+Breadcrumbs::register('studentEdit',function ($breadcrumbs, $student){
+    $breadcrumbs->parent('student');
+    $breadcrumbs->push('Edit',route('student.edit',$student));
+});

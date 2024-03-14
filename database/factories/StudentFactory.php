@@ -32,7 +32,7 @@ class StudentFactory extends Factory
             },
             'student_code' => $this->faker->randomNumber(8),
             'email' => $this->faker->unique()->safeEmail,
-            'birth_date' => $this->faker->date,
+            'date_of_birth' => $this->faker->date,
             'image' => $this->faker->imageUrl,
         ];
     }

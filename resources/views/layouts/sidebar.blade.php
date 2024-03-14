@@ -12,11 +12,11 @@
     <div class="border border-white p-3">
         <a href="{{ route('department.index') }}" class="text-decoration-none text-white">Department</a>
     </div>
-
-
-    <div class="border border-white p-3">
-        <a href="#" class="text-decoration-none text-white">Student</a>
-    </div>
+    @if($role == Base::ADMIN)
+        <div class="border border-white p-3">
+            <a href="{{route('student.index')}}" class="text-decoration-none text-white">Student</a>
+        </div>
+    @endif
     <div class="border border-white p-3">
         <a href="{{route('course.index')}}" class="text-decoration-none text-white">Course</a>
     </div>

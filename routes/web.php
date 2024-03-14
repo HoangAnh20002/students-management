@@ -17,11 +17,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::group(['middleware' => 'adminCheck'], function () {
-    Route::get('/adminMain',[\App\Http\Controllers\UserController::class,'index'])->name('adminMain');
+    Route::get('/adminMain',[\App\Http\Controllers\UserController::class,'index_ad'])->name('adminMain');
+    Route::resource('/student',\App\Http\Controllers\StudentController::class);
 });
 
 Route::group(['middleware' => 'studentCheck'], function () {
-    Route::get('/studentMain', [\App\Http\Controllers\StudentController::class, 'index'])->name('studentMain');
+    Route::get('/studentMain', [\App\Http\Controllers\UserController::class, 'index_st'])->name('studentMain');
 });
 
 Route::get('/login', [\App\Http\Controllers\LoginController::class,'showLoginForm'])->name('login');

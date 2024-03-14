@@ -9,7 +9,7 @@ class User extends Authenticatable
 {
     use HasFactory;
     use SoftDeletes;
-    protected $fillable = ['name','full_name','email','password','role'];
+    protected $fillable = ['full_name','email','password','role'];
 
     public function student(){
         return $this->hasMany(Student::class);

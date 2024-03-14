@@ -18,9 +18,8 @@ class StudentSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        for ($i = 0; $i < 95; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             $user = User::create([
-                "name" => $faker->userName,
                 "password" => Hash::make('12345678'),
                 "full_name" => $faker->name . "nguyen",
                 'email' => $faker->unique()->safeEmail,
@@ -33,8 +32,8 @@ class StudentSeeder extends Seeder
                 'user_id' => $user->id,
                 'department_id' => $department->id,
                 'student_code' => $faker->randomNumber(8),
-                'birth_date' => $faker->date,
-                'image' => $faker->imageUrl,
+                'date_of_birth' => $faker->date,
+                'image' => null,
             ]);
         }
     }

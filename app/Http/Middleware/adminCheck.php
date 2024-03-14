@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use function Laravel\Prompts\error;
 
 class adminCheck
 {
@@ -19,6 +20,6 @@ class adminCheck
         if(Auth::check() && Auth::user()->role == '1'){
             return $next($request);
         }
-        return redirect('login');
+        return redirect()->back()->with('error', 'Can not access');
     }
 }
