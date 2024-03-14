@@ -6,17 +6,22 @@ use App\Enums\Base;
 use App\Http\Requests\CourseRequest;
 use App\Repositories\CourseRepository;
 use App\Repositories\DepartmentRepository;
+use App\Repositories\StudentRepository;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CourseController extends Controller
 {
     protected $courseRepository;
+    protected $departmentRepository;
+    protected $studentRepository;
 
 
-    public function __construct(CourseRepository $courseRepository, DepartmentRepository $departmentRepository)
+    public function __construct(CourseRepository $courseRepository, DepartmentRepository $departmentRepository, StudentRepository $studentRepository)
     {
         $this->courseRepository = $courseRepository;
         $this->departmentRepository = $departmentRepository;
+        $this->studentRepository = $studentRepository;
     }
 
     public function index()
@@ -34,7 +39,7 @@ class CourseController extends Controller
         $role = Auth::user()->role;
         $departments = $this->departmentRepository->all();
         if ($role == Base::STUDENT) {
-            return redirect('login')->with('error', 'Permission denied. Please log in with a valid account.');
+            return redirect()->route('errors.403');
         }
         return view('course.create', compact('role', 'departments'));
     }
@@ -66,7 +71,7 @@ class CourseController extends Controller
         $role = Auth::user()->role;
         $departments = $this->departmentRepository->all();
         if ($role == Base::STUDENT) {
-            return redirect('login')->with('error', 'Permission denied. Please log in with a valid account.');
+            return redirect()->route('403');
         }
 
         $course = $this->courseRepository->find($id);
@@ -112,4 +117,33 @@ class CourseController extends Controller
         }
     }
 
+    public function registerForm()
+    {
+        $user = auth()->user();
+        $studentIDs = $user->student->pluck('id')->first();
+        $student = $this->studentRepository->find($studentIDs);
+        $courses = $student->department->course;
+        $registerCourse = $student->course;
+        return view('course.courseRegister', compact('courses', 'student', 'registerCourse'));
+    }
+
+    public function registerConfirm(Request $request)
+    {
+        $request->validate([
+            'courses' => 'required|array|min:1',
+            'courses.*' => 'integer|exists:courses,id',
+        ],[
+            'courses.required' => 'At least one course must be selected',
+            'courses.array' => 'The selected course is invalid',
+            'courses.min' => 'At least one course must be selected',
+            'courses.*.integer' => 'The selected course is invalid',
+            'courses.*.exists' => 'The selected course is invalid',
+        ]);
+        $user = auth()->user();
+        $studentIDs = $user->student->pluck('id')->first();
+        $student = $this->studentRepository->find($studentIDs);
+        $courseIds = $request->input('course_ids', []);
+        $this->courseRepository->confirmCourseRegistration($student, $courseIds);
+        return redirect()->route('courses.register')->with('success', 'Courses registered successfully.');
+    }
 }

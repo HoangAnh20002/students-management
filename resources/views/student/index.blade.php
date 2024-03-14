@@ -10,11 +10,6 @@
             {{ session('success') }}
         </div>
     @endif
-    @if(session(('error')))
-        <div class="alert alert-danger">
-            {{session('error')}}
-        </div>
-    @endif
     @if($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -22,6 +17,17 @@
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
+        </div>
+    @endif
+    @if(session()->has('error'))
+        <div class="alert alert-danger">
+            @if(is_array(session('error')))
+                @foreach(session('error') as $error)
+                    <p>{{ $error }}</p>
+                @endforeach
+            @else
+                <p>{{ session('error') }}</p>
+            @endif
         </div>
     @endif
     <style>
@@ -35,20 +41,21 @@
             overflow: hidden;
             white-space: nowrap;
         }
+
         .name:hover {
             overflow: visible;
             white-space: normal;
             height: auto;
         }
+
         .table-container:hover {
             cursor: grabbing;
         }
+
         .search {
-            width: 600px;
             text-align: center;
-            float: right;
-            margin-right: 20px;
         }
+
         .search_box {
             width: 90px;
         }
@@ -63,13 +70,13 @@
     </form>
 
     <div class=" mt-3">
-        <div class="search border bg-light shadow-sm py-2 px-5 rounded ml-4">
+        <div class=" container search border bg-light shadow-sm py-2 px-5 rounded ml-4">
             <form action="{{ route('student.index') }}" method="GET">
-                <div class="d-flex justify-content-around">
+                <div class="d-flex justify-content-around pl-5 py-2">
                     <div class="search_box">
                         <label for="result_from">Result From:</label>
                         <input type="number" id="result_from" class="form-control" name="result_from" min="0"
-                        value="{{ old('result_from') ?? (request()->input('result_from') !== '' ? request()->input('result_from') : '') }}">
+                               value="{{ old('result_from') ?? (request()->input('result_from') !== '' ? request()->input('result_from') : '') }}">
                     </div>
                     <div class="search_box">
                         <label for="result_to">Result To:</label>
@@ -86,8 +93,9 @@
                         <input type="number" id="age_to" class="form-control" name="age_to" min="0"
                                value="{{ old('age_to') ?? (request()->input('age_to') !== '' ? request()->input('age_to') : '') }}">
                     </div>
+                        <button type="submit" class="btn btn-success mt-4">Search</button>
                 </div>
-                <button type="submit" class="btn btn-success mt-2">Search</button>
+
             </form>
         </div>
 
