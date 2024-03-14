@@ -33,7 +33,7 @@ class DepartmentController extends Controller
     {
         $role = Auth::user()->role;
         if ($role == Base::STUDENT) {
-            return redirect('login')->with('error', 'Permission denied. Please log in with a valid account.');
+            return redirect()->route('403');
         }
         return view('department.create', compact('role'));
     }
@@ -64,7 +64,7 @@ class DepartmentController extends Controller
     {
         $role = Auth::user()->role;
         if ($role == Base::STUDENT) {
-            return redirect('login')->with('error', 'Permission denied. Please log in with a valid account.');
+            return redirect()->route('403');
         }
         $department = $this->departmentRepository->find($id);
 

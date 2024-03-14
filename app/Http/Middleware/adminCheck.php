@@ -20,6 +20,6 @@ class adminCheck
         if(Auth::check() && Auth::user()->role == '1'){
             return $next($request);
         }
-        return redirect()->back()->with('error', 'Can not access');
+        return redirect()->route('403');
     }
 }

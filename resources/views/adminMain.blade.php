@@ -1,4 +1,4 @@
-<div class="disabled"{{$role = 1}}></div>
+<div class="disabled"{{$role = \App\Enums\Base::ADMIN}}></div>
 @extends('layouts.home')
 @section('content')
     {{\DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs::render('home_ad')}}

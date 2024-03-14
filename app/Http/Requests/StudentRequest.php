@@ -24,8 +24,7 @@ class StudentRequest extends FormRequest
     {
          $rules =[
             'full_name' => 'required|string|max:255|regex:/^[a-zA-Z0-9]*$/',
-            'email' => 'required|unique:users|email|max:255',
-            'image' => 'nullable|ends_with:.jpg,.png',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
              'date_of_birth' => [
                  'required',
                  'date',
@@ -47,8 +46,11 @@ class StudentRequest extends FormRequest
 
         if ($this->isMethod('post')) {
             $rules['password'] = 'required|string|min:8|max:16';
+            $rules['email'] = 'required|unique:users|email|max:255';
+
         } else {
             $rules['password'] = 'nullable|string|min:8|max:16';
+            $rules['email'] = 'required|email|max:255';
         }
 
         return $rules;
@@ -69,7 +71,9 @@ class StudentRequest extends FormRequest
             'password.string' => 'Password must be a string',
             'password.min' => 'Password must be at least 8 characters',
             'password.max' => 'Password must not exceed 16 characters',
-            'image.ends_with' => 'Image must be a .jpg or .png file',
+            'avatar.image' => 'The uploaded file must be an image.',
+            'avatar.mimes' => 'The uploaded file must be a jpeg, png, jpg, or gif image.',
+            'avatar.max' => 'The uploaded file may not be greater than 2MB in size.',
             'birth_date.required' => 'Birth date is required',
             'birth_date.date' => 'Birth date must be a valid date',
             'courses.required' => 'At least one course must be selected',
