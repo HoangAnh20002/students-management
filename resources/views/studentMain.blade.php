@@ -14,14 +14,24 @@
     @endif
     <div>
         <div class="d-flex mt-5 justify-content-around">
-            <h2 class="text-center">
-                Information
-            </h2>
-            <form method="GET" action="{{ route('courses.register') }}">
-                <button class="bg-primary text-white btn" type="submit">Course register</button>
-            </form>
+            <div>
+                <h2 class="text-center">
+                    Information
+                </h2>
+            </div>
+            <div class="d-flex">
+                <div class="mr-3">
+                    @if($student->average_score !== null && $student->average_score !== 'N/A' && $student->average_score > 5 && $student->department->last()->course !== null)
+                        <form method="GET" action="{{ route('departments.register') }}">
+                            <button class="bg-primary text-white btn" type="submit">Department register</button>
+                        </form>
+                    @endif
+                </div>
+                <form method="GET" action="{{ route('courses.register') }}">
+                    <button class="bg-primary text-white btn" type="submit">Course register</button>
+                </form>
+            </div>
         </div>
-
         <div class="d-flex justify-content-around m-5">
             <div class=" border shadow bg-light p-4 text-center" style="width: 390px">
                 <div>
@@ -54,11 +64,11 @@
                     </form>
                 </div>
             </div>
-
             <div class=" border shadow bg-light p-4 ml-2" style="width: 600px">
                 <div class="mt-3">Name : {{$user->full_name}}</div>
                 <div class="mt-3">Email : {{$user->email}}</div>
-                <div class="mt-3">Birth of date : {{ \Carbon\Carbon::parse($student->date_of_birth)->format('d/m/Y') }}</div>
+                <div class="mt-3">Birth of date
+                    : {{ \Carbon\Carbon::parse($student->date_of_birth)->format('d/m/Y') }}</div>
                 <div class="mt-3">Student code : {{$student->student_code}}</div>
             </div>
         </div>
@@ -76,6 +86,7 @@
                     reader.readAsDataURL(input.files[0]);
                 }
             }
+
             function removeImage() {
                 let preview = document.getElementById('preview');
                 let imagePreview = document.getElementById('imagePreview');
@@ -86,4 +97,5 @@
                 fileInput.value = '';
             }
         </script>
+
 @endsection

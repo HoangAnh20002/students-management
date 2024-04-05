@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('students', function (Blueprint $table) {
+        Schema::create('department_student', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id',);
-            $table->string('student_code',20);
-            $table->string('image',255)->nullable();
-            $table->date('date_of_birth');
+            $table->unsignedInteger('department_id');
+            $table->unsignedInteger('student_id');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -27,6 +25,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('students');
+        Schema::dropIfExists('department_student');
     }
 };
+

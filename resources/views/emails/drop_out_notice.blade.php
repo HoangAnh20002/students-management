@@ -3,19 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Information Email</title>
+    <title>Email Notification</title>
     <style>
-        body, h1, h2, h3, h4, h5, h6, p, ul, li {
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
-        }
-
         .container {
             max-width: 600px;
             margin: 0 auto;
@@ -43,23 +32,18 @@
             font-weight: 600;
             padding-left: 12px;
         }
-
-        .hello {
-            font-size: 30px;
-            margin-bottom: 20px;
+        .content{
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
         }
-
-        .notice {
-            font-size: 18px;
-            margin-bottom: 10px;
+        .title{
+            text-align: center;
+            color: #333;
         }
-        ul {
-            margin-left: 20px;
-            margin-bottom: 20px;
-        }
-
-        li {
-            margin-bottom: 5px;
+        .end{
+            font-size: 0.8em;
+            color: #666;
         }
     </style>
 </head>
@@ -69,19 +53,17 @@
         <img class="img" src="https://media.istockphoto.com/id/1334774891/vector/pineapple-fruit-icon-template-vector-illustration.jpg?s=612x612&w=0&k=20&c=pfKPp640PFSqDMy-j-HORlrOhCzi7aZGBRrQb7vYhfg=" alt="Logo">
         <div class="name">Apple University</div>
     </div>
-    <p class="hello">Hello {{ $student_name }},</p>
+    <div class="content">
+        <h2 class="title">Notification: Drop out of university</h2>
 
-    <p>Your student account has been created successfully.</p>
+        <p>Hello {{ $student_name }},</p>
 
-    <p class="notice">Your login credentials:</p>
-    <ul>
-        <li><strong>Login Mail:</strong> {{$email}}</li>
-        <li><strong>Password:</strong> {{ $password }}</li>
-    </ul>
+        <p>Your final score was below average and you were dismissed</p>
 
-    <p>Please use the above credentials to log in.</p>
+        <p>Thank you.</p>
 
-    <p>Thank you!</p>
+        <p class="end">This is an automated email. Please do not reply.</p>
+    </div>
 </div>
 </body>
 </html>

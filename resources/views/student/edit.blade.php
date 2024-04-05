@@ -71,7 +71,7 @@
                         <label class="mt-3" for="department_id">Department:</label><br/>
                         <select id="department_id" name="department_id" class="form-select" required>
                             @foreach($departments as $department)
-                                <option value="{{ $department->id }}" {{ (old('department_id', $student->department_id) == $department->id) ? 'selected' : '' }}>
+                                <option value="{{ $department->id }}" {{ (old('department_id', $student->department->last()->id) == $department->id) ? 'selected' : '' }}>
                                     {{ $department->name }}
                                 </option>
                             @endforeach

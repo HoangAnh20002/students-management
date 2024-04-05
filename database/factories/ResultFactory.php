@@ -2,10 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Student;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Result;
-use App\Models\User;
-use App\Models\Course;
 
 class ResultFactory extends Factory
 {
@@ -23,14 +22,14 @@ class ResultFactory extends Factory
      */
     public function definition(): array
     {
+        $studentIds = Student::pluck('id')->toArray();
+        $courseIds = range(1, 5);
+
         return [
-            'user_id' => function () {
-                return User::factory()->create()->id;
-            },
-            'course_id' => function () {
-                return Course::factory()->create()->id;
-            },
+            'student_id' => $this->faker->randomElement($studentIds),
+            'course_id' => $this->faker->randomElement($courseIds),
             'mark' => $this->faker->randomFloat(1, 0, 10),
         ];
     }
+
 }

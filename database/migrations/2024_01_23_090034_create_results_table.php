@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('student_id',);
             $table->unsignedInteger('course_id',);
-            $table->float('mark');
+            $table->float('mark')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

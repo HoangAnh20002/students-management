@@ -27,8 +27,20 @@ class CourseController extends Controller
     public function index()
     {
         $role = Auth::user()->role;
+        $results = null;
+        $departments = null;
+
+        if($role == Base::STUDENT){
+            $user = auth()->user();
+            $studentIDs = $user->student->pluck('id')->first();
+            $student = $this->studentRepository->find($studentIDs);
+            $results = $student->result;
+            $departments = $student->department;
+        }
+
         $courses = $this->courseRepository->paginate(Base::PAGE);
-        return view('course.index', compact('courses', 'role'));
+
+        return view('course.index', compact('courses', 'role','results','departments'));
     }
 
     /**
@@ -87,16 +99,13 @@ class CourseController extends Controller
      */
     public function update(CourseRequest $request)
     {
-        $data = $request->only('name');
         $id = $request->input('id');
         $departmentIds = $request->input('departments');
-
         $course = $this->courseRepository->find($id);
         if (!$course) {
             return redirect('course')->with('error', 'The record not found');
         }
-        $this->courseRepository->updateWithDepartments($id, $data, $departmentIds);
-
+        $this->courseRepository->updateWithDepartments($id, $departmentIds);
         return redirect('course')->with('success', 'Course updated successfully');
     }
 
@@ -122,22 +131,22 @@ class CourseController extends Controller
         $user = auth()->user();
         $studentIDs = $user->student->pluck('id')->first();
         $student = $this->studentRepository->find($studentIDs);
-        $courses = $student->department->course;
+        $courses = $student->department->last()->course;
+        $results = $student->result;
         $registerCourse = $student->course;
-        return view('course.courseRegister', compact('courses', 'student', 'registerCourse'));
+        return view('course.courseRegister', compact('courses', 'student', 'registerCourse','results'));
     }
-
     public function registerConfirm(Request $request)
     {
         $request->validate([
-            'courses' => 'required|array|min:1',
-            'courses.*' => 'integer|exists:courses,id',
+            'course_ids' => 'required|array|min:1',
+            'course_ids.*' => 'integer|exists:courses,id',
         ],[
-            'courses.required' => 'At least one course must be selected',
-            'courses.array' => 'The selected course is invalid',
-            'courses.min' => 'At least one course must be selected',
-            'courses.*.integer' => 'The selected course is invalid',
-            'courses.*.exists' => 'The selected course is invalid',
+            'course_ids.required' => 'At least one course must be selected',
+            'course_ids.array' => 'The selected course is invalid',
+            'course_ids.min' => 'At least one course must be selected',
+            'course_ids.*.integer' => 'The selected course is invalid',
+            'course_ids.*.exists' => 'The selected course is invalid',
         ]);
         $user = auth()->user();
         $studentIDs = $user->student->pluck('id')->first();

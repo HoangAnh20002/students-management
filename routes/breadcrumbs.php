@@ -64,4 +64,12 @@ Breadcrumbs::register('courseRegister',function ($breadcrumbs){
     $breadcrumbs->parent('home_st');
     $breadcrumbs->push('Course register',route('courses.register'));
 });
+Breadcrumbs::register('resultDetail',function ($breadcrumbs,$student){
+    $breadcrumbs->parent('student');
+    $breadcrumbs->push('Result Detail',route('result.show', $student));
+});
+Breadcrumbs::register('detail',function ($breadcrumbs,$student){
+    $breadcrumbs->parent('home_st');
+    $breadcrumbs->push('Result Detail',route('result.show', $student));
+});
 

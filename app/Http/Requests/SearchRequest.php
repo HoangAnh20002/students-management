@@ -22,8 +22,8 @@ class SearchRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'result_from' => 'nullable|integer|min:0|max:10',
-            'result_to' => 'nullable|integer|min:0|max:10|',
+            'result_from' => 'nullable|numeric|min:0|max:10',
+            'result_to' => 'nullable|numeric|min:0|max:10|',
             'age_from' => 'nullable|integer|min:0|max:150',
             'age_to' => 'nullable|integer|min:0|max:150|'
         ];

@@ -1,6 +1,6 @@
 <?php
 namespace App\Repositories;
-use App\Models\Department;
+use App\Models\Result;
 use App\Repositories\Interfaces\ResultRepositoryInterface;
 
 class ResultRepository extends BaseRepository implements ResultRepositoryInterface
@@ -11,6 +11,26 @@ class ResultRepository extends BaseRepository implements ResultRepositoryInterfa
     }
     public function getModel()
     {
-        return $this->model = app()->make(Department::class);
+        return $this->model = app()->make(Result::class);
+    }
+    public function updateMarks(array $resultIds, array $marks)
+    {
+        if (count($resultIds) !== count($marks)) {
+            return false;
+        }
+
+        $count = count($resultIds);
+        for ($i = 0; $i < $count; $i++) {
+            $resultId = $resultIds[$i];
+            $mark = $marks[$i];
+            $result = $this->model->find($resultId);
+            if ($result) {
+                $result->mark = $mark;
+                $result->save();
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 }

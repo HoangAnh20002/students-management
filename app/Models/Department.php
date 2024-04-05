@@ -14,4 +14,7 @@ class Department extends Model
     public function course(){
         return $this->belongsToMany(Course::class,'department_course','department_id','course_id')->withTimestamps();
     }
+    public function student(){
+        return $this->belongsToMany(Student::class,'department_student','department_id','student_id')->withTimestamps();
+    }
 }
