@@ -21,6 +21,11 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
     {
         return $this->model = app()->make(Student::class);
     }
+    public function getWithRelationship($page)
+    {
+        return $this->model->latest('id')->with(['user', 'course', 'department','result'])->paginate(Base::PAGE);
+    }
+
     public function createWithUser(array $data)
     {
         $department = Department::findOrFail($data['department_id']);
@@ -28,7 +33,7 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
             'full_name' => $data['full_name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'role' => '0',
+            'role' => Base::STUDENT,
         ]);
         $student = $this->model->create([
             'user_id' => $user->id,
@@ -101,7 +106,7 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
                     $totalMarks += $result->mark;
                 }
             }
-            if ($hasNullMark || $student->course->count('course') < $student->department->last()->course->count('course')) {
+            if ($hasNullMark || $student->course->count() < $student->department->last()->course->count()) {
                 return 'N/A';
             }
             return $totalCourses > 0 ? $totalMarks / $totalCourses : 0;
@@ -116,7 +121,7 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
         $resultTo = $request->query('result_to');
         $ageFrom = $request->query('age_from');
         $ageTo = $request->query('age_to');
-        $students = $this->model->with('course.result')->get();
+        $students = $this->model->with('course.result')->paginate(Base::PAGE);
         $filteredStudents = $students->filter(function ($student) use ($resultFrom, $resultTo, $ageFrom, $ageTo) {
             $totalMarks = 0;
             $totalCourses = $student->course->count();

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 use App\Enums\Base;
-use App\Exports\ResultExports;
 use App\Http\Requests\ResultRequest;
 use App\Models\Result;
 use App\Repositories\ResultRepository;
@@ -11,8 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use League\Csv\Reader;
 use League\Csv\Writer;
-use Maatwebsite\Excel\Facades\Excel;
-use PhpParser\Node\Stmt\DeclareDeclare;
 
 
 class ResultController extends Controller
@@ -30,7 +27,7 @@ class ResultController extends Controller
     public function index()
     {
         $role = Auth::user()->role;
-        $results = $this->resultRepository->paginate(Base::PAGE);
+        $results = $this->resultRepository->getResultWithRelationship(Base::PAGE);
 
         return view('result.index',compact('role','results'));
     }
@@ -63,9 +60,11 @@ class ResultController extends Controller
         $studentCourse = $student->course;
         $courseDepartment = $student->department->last()->course;
         $notRegisteredCourses = $courseDepartment->diff($studentCourse)->pluck('name');
+
         if (!$student) {
             return redirect()->route('student.index')->with('error','Student not found');
         }
+
         return view('result.detail', compact('student','results','notRegisteredCourses','role'));
     }
     /**
@@ -83,13 +82,13 @@ class ResultController extends Controller
     {
         $marks = $request->input('marks');
         $resultIds = $request->input('result_ids');
+
         if (count($marks) > 0 && !empty($resultIds)) {
             $result = $this->resultRepository->updateMarks($resultIds, $marks);
 
             if (!$result) {
                 return response()->json(['success' => false, 'message' => 'Result not found.'], 404);
             }
-
             return response()->json(['success' => true, 'message' => 'Marks updated successfully.'], 200);
         } else {
             return response()->json(['success' => false, 'message' => 'Invalid input data.'], 400);
@@ -117,6 +116,7 @@ class ResultController extends Controller
             ];
             $this->resultRepository->updateOrInsert('results', $data);
         }
+
         return redirect()->route('student.index')->with('success','Import successfully');
     }
 
@@ -130,6 +130,7 @@ class ResultController extends Controller
         foreach ($results as $result) {
             $csv->insertOne([$result->id, $result->student_id, $result->course_id, $result->mark]);
         }
+
         $csv->output('results.csv');
     }
 

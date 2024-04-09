@@ -27,7 +27,7 @@
                     <td>
                         <input hidden name="result_ids[]" value="{{ $result->id }}">
                         @if($role == Base::ADMIN)
-                            <input class="form-control w-25" type="number" step="any" name="marks[]" value="{{ $result->mark }}">
+                            <input class="form-control w-25" type="number" name="marks[]" min="0" max="10" step="any" value="{{ $result->mark }}">
                         @elseif($role == Base::STUDENT)
                             <label>{{ $result->mark }}</label>
                         @endif
@@ -73,7 +73,9 @@
             });
         });
     </script>
+    @push('ajax')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    @endpush
 @endsection
 
 

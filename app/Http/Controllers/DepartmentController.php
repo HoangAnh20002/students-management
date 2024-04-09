@@ -27,6 +27,7 @@ class DepartmentController extends Controller
     {
         $role = Auth::user()->role;
         $departments = $this->departmentRepository->paginate(Base::PAGE);
+
         return view('department.index', compact('departments', 'role'));
     }
 
@@ -36,9 +37,11 @@ class DepartmentController extends Controller
     public function create()
     {
         $role = Auth::user()->role;
+
         if ($role == Base::STUDENT) {
             return redirect()->route('403');
         }
+
         return view('department.create', compact('role'));
     }
 
@@ -67,6 +70,7 @@ class DepartmentController extends Controller
     public function edit($id)
     {
         $role = Auth::user()->role;
+
         if ($role == Base::STUDENT) {
             return redirect()->route('403');
         }
@@ -88,9 +92,11 @@ class DepartmentController extends Controller
         $departmentData = $request->only('name');
         $id = $request->input('id');
         $department = $this->departmentRepository->find($id);
+
         if (!$department) {
             return redirect('department')->with('error', 'The record not found');
         }
+
         $this->departmentRepository->update($id, $departmentData);
 
         return redirect('department')->with('success', 'Department updated successfully');
@@ -118,6 +124,7 @@ class DepartmentController extends Controller
         $student = $this->studentRepository->find($studentIDs);
         $departments = $this->departmentRepository->all();
         $registerDepartments = $student->department;
+
         return view('department.departmentRegister', compact('departments', 'student', 'registerDepartments'));
     }
     public function registerConfirm(Request $request)
@@ -129,11 +136,13 @@ class DepartmentController extends Controller
             'department.integer' => 'The selected department is invalid',
             'department.exists' => 'The selected department is invalid',
         ]);
+
         $user = auth()->user();
         $studentIDs = $user->student->pluck('id')->first();
         $student = $this->studentRepository->find($studentIDs);
         $department = $request->input('department');
         $student->department()->attach($department);
+
         return redirect()->route('departments.register')->with('success', 'Department registered successfully.');
     }
 }

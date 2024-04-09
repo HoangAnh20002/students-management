@@ -36,17 +36,20 @@ class StudentController extends Controller
         $departments = $this->departmentRepository->all();
         $courses = $this->courseRepository->all();
         $course_sum = $this->courseRepository->getTotalCourses();
+
         if ($request->isNotFilled('result_from', 'result_to', 'age_from', 'age_to')) {
-            $students = $this->studentRepository->paginate(Base::PAGE);
+            $students = $this->studentRepository->getWithRelationship(Base::PAGE);
         } else {
             $students = $this->studentRepository->search($request);
             if ($students->isEmpty()) {
                 $error = 'Student not found';
             }
         }
+
         foreach ($students as $student) {
             $student->average_score = $this->studentRepository->calculateAverageScore($student);
         }
+
         return view('student.index', compact('students', 'course_sum', 'error', 'departments', 'courses'));
     }
 
@@ -57,6 +60,7 @@ class StudentController extends Controller
     {
         $departments = $this->departmentRepository->all();
         $courses = $this->courseRepository->all();
+
         return view('student.create', compact('departments', 'courses'));
     }
 
@@ -80,6 +84,7 @@ class StudentController extends Controller
             } else {
                 return response()->json(['status' => 'error', 'message' => 'Failed to create student'], 422);
             }
+
         } else{
             $file_name = null;
             if ($request->hasFile('avatar')) {
@@ -108,6 +113,7 @@ class StudentController extends Controller
         $studentIDs = $user->student->pluck('id')->first();
         $student = $this->studentRepository->find($studentIDs);
         $student->average_score = $this->studentRepository->calculateAverageScore($student);
+
         return view('studentMain', compact('user', 'student'));
     }
 
@@ -120,6 +126,7 @@ class StudentController extends Controller
             'avatar.mimes' => 'The uploaded file must be a jpeg, png, jpg, or gif image.',
             'avatar.max' => 'The uploaded file may not be greater than 2MB in size.',
         ]);
+
         if ($request->hasFile('avatar')) {
             $file = $request->file('avatar');
             $file_name = $file->getClientOriginalName();
@@ -127,6 +134,7 @@ class StudentController extends Controller
             $request->merge(['image' => $file_name]);
             $avatar = $request->image;
             $this->studentRepository->updateAvatar($id, $avatar);
+
             return redirect()->route('studentMain')->with('success', 'Avatar updated successfully');
         } else {
             return redirect()->route('studentMain')->with('error', 'No file uploaded for avatar update.');
@@ -139,11 +147,14 @@ class StudentController extends Controller
     public function edit($id)
     {
         $student = $this->studentRepository->find($id);
+
         if (!$student) {
             return redirect('student.index')->with('error', 'Student not found');
         }
+
         $departments = $this->departmentRepository->all();
         $courses = $this->courseRepository->all();
+
         return view('student.edit', compact('courses', 'student', 'departments'));
     }
 
@@ -154,9 +165,11 @@ class StudentController extends Controller
     {
         $id = $request->input('id');
         $student = $this->studentRepository->find($id);
+
         if (!$student) {
             return redirect('student')->with('error', 'The record not found');
         }
+
         if ($request->file('avatar')) {
             $file = $request->avatar;
             $file_name = $file->getClientOriginalName();
@@ -166,6 +179,7 @@ class StudentController extends Controller
             $old_image = $student->image;
             $file_name = $old_image;
         }
+
         $request->merge(['image' => $file_name]);
         $data = $request->only(['name', 'full_name', 'email', 'student_code', 'password', 'image', 'date_of_birth']);
         $departmentId = $request->input('department_id');
@@ -185,6 +199,7 @@ class StudentController extends Controller
         if (!$student) {
             return redirect()->route('student.index')->with('error', 'Record not found');
         }
+
         $this->studentRepository->deleteStudent($id);
 
         return redirect()->route('student.index')->with('success', 'Record deleted successfully');
@@ -197,7 +212,9 @@ class StudentController extends Controller
         $studentCourse = $student->course;
         $courseDepartment = $student->department->last()->course;
         $notRegisteredCourses = $courseDepartment->diff($studentCourse)->pluck('name');
+
         Mail::to($student->user->email)->send(new CourseRegistrationNotice($student->user->full_name, $notRegisteredCourses));
+
         return redirect()->back()->with('success', 'Email notice sent successfully.');
     }
 }

@@ -86,28 +86,27 @@
             display: none;
         }
 
+        #loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            z-index: 10000;
+            display: none;
+        }
+
         .modal.show + #overlay {
             display: block;
         }
 
-        #loadingModal.modal.show {
-            z-index: 10000;
+        .modal.show + #overlay {
+            z-index: 1050;
         }
     </style>
-    <!-- Modal -->
-    <div class="modal fade" id="loadingModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content1">
-                <div class="modal-body text-center">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <p>Loading...</p>
-                </div>
-            </div>
-        </div>
+
+    <div id="overlay"></div>
+    <div class="spinner-border text-light" role="status" id="loading" >
+        <span class="visually-hidden">Loading...</span>
     </div>
-    <div id="overlay" ></div>
     <div id="page-wrapper">
     <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -204,7 +203,7 @@
             <h2>Student List</h2>
             <div>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1">
-                    Quirk Create
+                    Quick Create
                 </button>
                 <button class="bg-primary text-white btn ml-2" type="submit">Create</button>
             </div>
@@ -216,12 +215,12 @@
                 <div class="d-flex justify-content-around pl-5 py-2">
                     <div class="search_box">
                         <label for="result_from">Result From:</label>
-                        <input type="number" step="any" id="result_from" class="form-control" name="result_from" min="0"
+                        <input type="number" step="any" id="result_from" class="form-control" name="result_from" min="0" max="10"
                                value="{{ old('result_from') ?? (request()->input('result_from') !== '' ? request()->input('result_from') : '') }}">
                     </div>
                     <div class="search_box">
                         <label for="result_to">Result To:</label>
-                        <input type="number" step="any" id="result_to" class="form-control" name="result_to" min="0"
+                        <input type="number" step="any" id="result_to" class="form-control" name="result_to" min="0" max="10"
                                value="{{ old('result_to') ?? (request()->input('result_to') !== '' ? request()->input('result_to') : '') }}">
                     </div>
                     <div class="search_box">
@@ -314,7 +313,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    @if($student->course->count('course') < $student->department->last()->course->count('course'))
+                                    @if($student->course->count() < $student->department->last()->course->count())
                                         <form action="{{ route('student.send_email_notice') }}" method="POST">
                                             @csrf
                                             <input type="hidden" name="student_id" value="{{ $student->id }}">
@@ -383,7 +382,8 @@
         $(document).ready(function () {
             $('#createStudentForm').submit(function (event) {
                 event.preventDefault();
-                $('#loadingModal').modal('show');
+                $('#overlay').show();
+                $('#loading').show();
                 let formData = new FormData(this);
                 $.ajax({
                     url: "{{ route('student.store') }}",
@@ -395,7 +395,8 @@
                     contentType: false,
                     processData: false,
                     success: function (response) {
-                        console.log(response)
+                        $('#overlay').show();
+                        $('#loading').show();
                         if (response.status === 'success') {
                             $('#exampleModal1').modal('hide');
                             location.reload();
@@ -469,4 +470,4 @@
         });
     </script>
 @endsection
-@stack('studentIndexScript')
+

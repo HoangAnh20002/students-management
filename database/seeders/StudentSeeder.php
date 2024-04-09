@@ -12,6 +12,27 @@ class StudentSeeder extends Seeder
      */
     public function run()
     {
-        Student::factory()->count(100)->create();
+        $chunkSize = 10000;
+
+        $totalRecords = 300000;
+
+        $iterations = ceil($totalRecords / $chunkSize);
+
+        for ($i = 0; $i < $iterations; $i++) {
+            $this->createChunk($chunkSize);
+        }
     }
+
+    /**
+     * Create a chunk of student records.
+     *
+     * @param int $chunkSize
+     * @return void
+     */
+    protected function createChunk($chunkSize)
+    {
+        Student::factory()->times($chunkSize)->create();
+    }
+
+
 }

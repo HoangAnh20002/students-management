@@ -53,6 +53,7 @@ class CourseController extends Controller
         if ($role == Base::STUDENT) {
             return redirect()->route('errors.403');
         }
+
         return view('course.create', compact('role', 'departments'));
     }
 
@@ -64,6 +65,7 @@ class CourseController extends Controller
         $data = $request->only('name');
         $departmentIds = $request->input('departments');
         $this->courseRepository->createWithDepartments($data, $departmentIds);
+
         return redirect('course')->with('success', 'Course added successfully');
     }
 
@@ -82,14 +84,17 @@ class CourseController extends Controller
     {
         $role = Auth::user()->role;
         $departments = $this->departmentRepository->all();
+
         if ($role == Base::STUDENT) {
             return redirect()->route('403');
         }
 
         $course = $this->courseRepository->find($id);
+
         if (!$course) {
             return redirect('course')->with('error', 'Course not found');
         }
+
         return view('course.edit', compact('course', 'role', 'departments'));
     }
 
@@ -102,10 +107,13 @@ class CourseController extends Controller
         $id = $request->input('id');
         $departmentIds = $request->input('departments');
         $course = $this->courseRepository->find($id);
+
         if (!$course) {
             return redirect('course')->with('error', 'The record not found');
         }
+
         $this->courseRepository->updateWithDepartments($id, $departmentIds);
+
         return redirect('course')->with('success', 'Course updated successfully');
     }
 
@@ -117,7 +125,9 @@ class CourseController extends Controller
         if ($this->courseRepository->hasStudents($id)) {
             return redirect()->route('course.index')->with('error', 'This course has student records and cannot be deleted.');
         }
+
         $record = $this->courseRepository->find($id);
+
         if ($record) {
             $record->delete();
             return redirect()->route('course.index')->with('success', 'Record deleted successfully');
@@ -134,6 +144,7 @@ class CourseController extends Controller
         $courses = $student->department->last()->course;
         $results = $student->result;
         $registerCourse = $student->course;
+
         return view('course.courseRegister', compact('courses', 'student', 'registerCourse','results'));
     }
     public function registerConfirm(Request $request)
@@ -148,11 +159,13 @@ class CourseController extends Controller
             'course_ids.*.integer' => 'The selected course is invalid',
             'course_ids.*.exists' => 'The selected course is invalid',
         ]);
+
         $user = auth()->user();
         $studentIDs = $user->student->pluck('id')->first();
         $student = $this->studentRepository->find($studentIDs);
         $courseIds = $request->input('course_ids', []);
         $this->courseRepository->confirmCourseRegistration($student, $courseIds);
+
         return redirect()->route('courses.register')->with('success', 'Courses registered successfully.');
     }
 }

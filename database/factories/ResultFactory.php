@@ -22,7 +22,7 @@ class ResultFactory extends Factory
      */
     public function definition(): array
     {
-        $studentIds = Student::pluck('id')->toArray();
+        $studentIds =  range(950001,1000000);
         $courseIds = range(1, 5);
 
         return [

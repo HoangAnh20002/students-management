@@ -11,13 +11,13 @@ class UserController extends Controller
         return view('adminMain');
     }
 
-
     public function fetchWeather()
     {
         $response = Http::get(env('API_WEATHER_URL') , [
             'q' => 'Hanoi',
             'appid' => env('API_WEATHER_KEY'),
         ]);
+
         return $response->json();
     }
 }
