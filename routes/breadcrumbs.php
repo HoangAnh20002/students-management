@@ -60,3 +60,8 @@ Breadcrumbs::register('studentEdit',function ($breadcrumbs, $student){
     $breadcrumbs->parent('student');
     $breadcrumbs->push('Edit',route('student.edit',$student));
 });
+Breadcrumbs::register('courseRegister',function ($breadcrumbs){
+    $breadcrumbs->parent('home_st');
+    $breadcrumbs->push('Course register',route('courses.register'));
+});
+

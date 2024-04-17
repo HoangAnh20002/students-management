@@ -9,6 +9,7 @@ use App\Repositories\CourseRepository;
 use App\Repositories\DepartmentRepository;
 use App\Repositories\StudentRepository;
 use App\Repositories\UserRepository;
+use Illuminate\Http\Request;
 
 
 class StudentController extends Controller
@@ -30,23 +31,20 @@ class StudentController extends Controller
     public function index(SearchRequest $request)
     {
         $course_sum = $this->courseRepository->getTotalCoures();
-        if ($request->hasAny(['result_from', 'result_to', 'age_from', 'age_to'])) {
-            $resultFrom = $request->input('result_from');
-            $resultTo = $request->input('result_to');
-            $ageFrom = $request->input('age_from');
-            $ageTo = $request->input('age_to');
-            $students = $this->studentRepository->search($resultFrom, $resultTo, $ageFrom, $ageTo);
-            if ($students->isEmpty()) {
-                return redirect()->back()->with('error', 'Student not found');
-            }
+        if($request == null){
+            $students = $this->studentRepository->paginate(Base::PAGE);
         } else {
-            $students = $this->studentRepository->paginate(Base::STUDENT);
-        }
-        foreach ($students as $student) {
-            $student->average_score = $this->studentRepository->calculateAverageScore($student);
+            $students = $this->studentRepository->search($request);
+            if ($students->isEmpty()) {
+                $students = $this->studentRepository->paginate(Base::STUDENT);
+            }
+            foreach ($students as $student) {
+                $student->average_score = $this->studentRepository->calculateAverageScore($student);
+            }
         }
         return view('student.index', compact('students', 'course_sum'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -87,7 +85,31 @@ class StudentController extends Controller
      */
     public function show()
     {
-        //
+        $user = auth()->user();
+        $studentIDs = $user->student->pluck('id')->first();
+        $student = $this->studentRepository->find($studentIDs);
+        return view('studentMain', compact('user','student'));
+    }
+    public function updateAvatar(Request $request, $id)
+    {
+        $request->validate([
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ], [
+            'avatar.image' => 'The uploaded file must be an image.',
+            'avatar.mimes' => 'The uploaded file must be a jpeg, png, jpg, or gif image.',
+            'avatar.max' => 'The uploaded file may not be greater than 2MB in size.',
+        ]);
+        if ($request->hasFile('avatar')) {
+            $file = $request->file('avatar');
+            $file_name = $file->getClientOriginalName();
+            $file->storeAs('avatars', $file_name, 'public');
+            $request->merge(['image' => $file_name]);
+            $avatar = $request->image;
+            $this->studentRepository->updateAvatar($id, $avatar);
+            return redirect()->route('studentMain')->with('success', 'Avatar updated successfully');
+        } else {
+            return redirect()->route('studentMain')->with('error', 'No file uploaded for avatar update.');
+        }
     }
 
     /**
@@ -104,8 +126,6 @@ class StudentController extends Controller
 
         return view('student.edit', compact('courses', 'student', 'departments'));
     }
-
-
     /**
      * Update the specified resource in storage.
      */
