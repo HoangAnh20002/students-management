@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Course;
 use App\Models\Student;
+use App\Models\StudentCourse;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -25,13 +26,13 @@ class StudentCourseFactory extends Factory
      */
     public function definition(): array
     {
+        $studentIds = Student::pluck('id')->toArray();
+        $courseIds = range(1, 5);
+
         return [
-            'student_id' => function () {
-                return Student::factory()->create()->id;
-            },
-            'course_id' => function () {
-                return Course::factory()->create()->id;
-            },
+            'student_id' => $this->faker->randomElement($studentIds),
+            'course_id' => $this->faker->randomElement($courseIds),
         ];
     }
+
 }

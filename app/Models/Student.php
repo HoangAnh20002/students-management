@@ -10,7 +10,7 @@ class Student extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $fillable = ['user_id','department_id','student_code','image','date_of_birth'];
+    protected $fillable = ['user_id','student_code','image','date_of_birth'];
 
     public function user(){
         return $this->belongsTo(User::class);
@@ -20,7 +20,7 @@ class Student extends Model
     }
     public function department()
     {
-        return $this->belongsTo(Department::class);
+        return $this->belongsToMany(Department::class,'department_student','student_id','department_id')->withTimestamps();
     }
     public function result(){
         return $this->hasMany(Result::class);

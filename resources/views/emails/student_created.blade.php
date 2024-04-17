@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Template</title>
+    <title>Information Email</title>
     <style>
-        /* Reset CSS */
         body, h1, h2, h3, h4, h5, h6, p, ul, li {
             margin: 0;
             padding: 0;
@@ -54,7 +53,6 @@
             font-size: 18px;
             margin-bottom: 10px;
         }
-
         ul {
             margin-left: 20px;
             margin-bottom: 20px;

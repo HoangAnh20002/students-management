@@ -4,17 +4,6 @@
 @endphp
 @extends('layouts.home')
 @section('content')
-    @php
-        $register = false;
-    @endphp
-    @foreach ($courses as $course)
-        @if (!$registerCourse->contains($course))
-            @php
-                $register = true;
-            @endphp
-            @break
-        @endif
-    @endforeach
     {{\DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs::render('courseRegister')}}
     @if($errors->any())
         <div class="alert alert-danger">
@@ -34,16 +23,20 @@
     <table class="table mt-3">
         <form action="{{ route('courses.confirm') }}" method="POST">
             @csrf
-            <div>
-                <button class="btn btn-primary float-right mt-3 mb-5 mr-3" type="submit">Register Selected Courses
-                </button>
-            </div>
+            @if($courses->diff($registerCourse)->isNotEmpty())
+                <div>
+                    <button class="btn btn-primary float-right mt-3 mb-5 mr-3" type="submit">Register Selected Courses
+                    </button>
+                </div>
+            @endif
             <thead>
             <tr>
-                @if($register)
+                @if($courses->diff($registerCourse)->isNotEmpty())
                     <th style="width: 30px">
                         <input type="checkbox" id="check_all">
                     </th>
+                @else
+                    <th></th>
                 @endif
                 <th>Course</th>
                 <th>Status</th>
@@ -51,35 +44,24 @@
             </tr>
             </thead>
             <tbody>
-            @foreach ($courses as $course)
+            @foreach($results as $result)
                 <tr>
-                    @if($register)
-                        <td>
-                            @if (!$registerCourse->contains($course))
-                                <input id="course_{{ $course->id }}" class="course_checkbox" type="checkbox"
-                                       name="course_ids[]" value="{{ $course->id }}">
-                            @endif
-                        </td>
-                    @endif
-                    <td><label for="course_{{$course->id}}">{{ $course->name }}</label></td>
-                    <td>
-                        @if ($registerCourse->contains($course))
-                            Already registered
-                        @else
-                            Course is not registered
-                        @endif
-                    </td>
-                    <td>
-                        @if ($registerCourse->contains($course))
-                            {{ optional($course->result)->mark != null ? $course->result->mark : 'N/A' }}
-                        @else
-                            N/A
-                        @endif
-                    </td>
+                    <td></td>
+                    <td>{{$result->course->name}}</td>
+                    <td>Already registered</td>
+                    <td>{{$result->mark !== null ? $result->mark : 'N/A'}}</td>
+                </tr>
+            @endforeach
+            @foreach(($courses->diff($registerCourse)) as $notRegisterCourse)
+                <tr>
+                    <td><input id="course_{{$notRegisterCourse->id}}" class="course_checkbox" type="checkbox"
+                               name="course_ids[]" value="{{$notRegisterCourse->id}}"></td>
+                    <td>{{$notRegisterCourse->name}}</td>
+                    <td>Course is not registered</td>
+                    <td>N/A</td>
                 </tr>
             @endforeach
             </tbody>
-
         </form>
     </table>
     <script>

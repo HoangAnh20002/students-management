@@ -18,7 +18,6 @@
             {{session('error')}}
         </div>
     @endif
-
     <form method="GET" action="{{ route('course.create') }}">
         <div class="d-flex mt-3 justify-content-around">
             <h2>Course List</h2>
@@ -36,6 +35,9 @@
             <th scope="col">Name</th>
             @if($role == Base::ADMIN)
                 <th scope="col">Action</th>
+            @else
+                <th scope="col">Result</th>
+                <th scope="col">Department</th>
             @endif
         </tr>
         </thead>
@@ -84,6 +86,35 @@
                             </div>
 
                         </div>
+                    </td>
+                @else
+                    <td>
+                        @php
+                            $markExists = false;
+                        @endphp
+                        @foreach($results as $result)
+                            @if($result->course == $course)
+                                @if($result->mark !== null)
+                                    {{ $result->mark }}
+                                    @php
+                                        $markExists = true;
+                                    @endphp
+                                @endif
+                            @endif
+                        @endforeach
+                        @if (!$markExists)
+                            N/A
+                        @endif
+                    </td>
+                    <td>
+                        @foreach($course->department as $department)
+                            @if($departments->contains('id', $department->id))
+                                {{$department->name}}
+                                @if (!$loop->last)
+                                    ,
+                                @endif
+                            @endif
+                        @endforeach
                     </td>
                 @endif
             </tr>

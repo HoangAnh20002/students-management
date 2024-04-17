@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Result;
 use App\Models\Student;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Models\Course;
@@ -25,16 +26,24 @@ class CourseRepository extends BaseRepository implements CourseRepositoryInterfa
         $course->department()->attach($departmentIds);
         return $course;
     }
-    public function updateWithDepartments($id, array $data, array $departmentIds)
+    public function updateWithDepartments($id, array $departmentIds)
     {
         $course = $this->model->findOrFail($id);
+        $course->department()->sync($departmentIds);
         return $course;
     }
-    public function getTotalCoures(){
+    public function getTotalCourses(){
         return $this->model->count();
     }
     public function confirmCourseRegistration(Student $student, array $courseIds)
     {
         $student->course()->attach($courseIds);
+        foreach ($courseIds as $courseId) {
+            Result::create([
+                'student_id' => $student->id,
+                'course_id' => $courseId,
+                'mark' => null,
+            ]);
+        }
     }
 }

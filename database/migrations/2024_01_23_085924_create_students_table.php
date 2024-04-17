@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('user_id',);
-            $table->unsignedInteger('department_id',);
             $table->string('student_code',20);
             $table->string('image',255)->nullable();
             $table->date('date_of_birth');

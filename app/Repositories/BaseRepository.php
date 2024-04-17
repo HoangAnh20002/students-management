@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Repositories\Interfaces\BaseRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 
 abstract class BaseRepository implements BaseRepositoryInterface
@@ -49,5 +50,10 @@ abstract class BaseRepository implements BaseRepositoryInterface
     public function paginate($page)
     {
         return $this->model->orderBy('id', 'desc')->paginate($page);
+    }
+
+    public function updateOrInsert(string $table, array $data)
+    {
+        DB::table($table)->updateOrInsert($data);
     }
 }

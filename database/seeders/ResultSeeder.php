@@ -3,10 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
 use App\Models\Result;
-use App\Models\Student;
-use App\Models\Course;
 
 class ResultSeeder extends Seeder
 {
@@ -15,22 +12,25 @@ class ResultSeeder extends Seeder
      */
     public function run(): void
     {
-        $faker = Faker::create();
+        $chunkSize = 10000;
 
-        $students = Student::all();
-        $courses = Course::all();
+        $totalRecords = 150000;
 
-        foreach ($students as $student) {
-            $selectedCourses = $courses->random(rand(1, 4));
+        $iterations = ceil($totalRecords / $chunkSize);
 
-            foreach ($selectedCourses as $course) {
-                Result::create([
-                    'student_id' => $student->id,
-                    'course_id' => $course->id,
-                    'mark' => $faker->randomFloat(2, 0, 10),
-                ]);
-            }
+        for ($i = 0; $i < $iterations; $i++) {
+            $this->createChunk($chunkSize);
         }
+    }
+    /**
+     * Create a chunk of result records.
+     *
+     * @param int $chunkSize
+     * @return void
+     */
+    protected function createChunk($chunkSize)
+    {
+        Result::factory()->times($chunkSize)->create();
     }
 
 

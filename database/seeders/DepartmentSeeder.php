@@ -14,7 +14,7 @@ class DepartmentSeeder extends Seeder
     public function run(): void
     {
         $faker = Faker::create();
-        $Departments = ['Technology ', 'Financial ', 'Business', 'Information'];
+        $Departments = ['Technology ', 'Financial ', 'Business', 'Information','Construction'];
         foreach ($Departments as $value) {
             Department::create([
                 'name' => $value,
