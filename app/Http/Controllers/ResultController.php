@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 use App\Enums\Base;
 use App\Http\Requests\ResultRequest;
+use App\Jobs\ExportResults;
 use App\Models\Result;
 use App\Repositories\ResultRepository;
 use App\Repositories\StudentRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use League\Csv\Reader;
-use League\Csv\Writer;
 
 
 class ResultController extends Controller
@@ -109,31 +109,30 @@ class ResultController extends Controller
         $results = $reader->getRecords();
 
         foreach ($results as $record) {
-            $data = [
-                'student_id' => $record['student_id'],
-                'course_id' => $record['course_id'],
-                'mark' => $record['mark'],
-            ];
-            $this->resultRepository->updateOrInsert('results', $data);
+            $courseExists = $this->resultRepository->checkExistedCourse($record['course_id']);
+            if ($courseExists) {
+                $data = [
+                    'student_id' => $record['student_id'],
+                    'course_id' => $record['course_id'],
+                    'mark' => $record['mark'],
+                ];
+                $this->resultRepository->updateOrInsert('results', $data);
+            } else {
+                continue;
+            }
         }
 
-        return redirect()->route('student.index')->with('success','Import successfully');
+        return redirect()->route('result.index')->with('success','Import successfully');
     }
+
+
 
 
     public function export()
     {
-        $results = $this->resultRepository->all();
-        $csv = Writer::createFromString('');
-        $csv->insertOne(['ID', 'Student ID', 'Course ID', 'Mark']);
-
-        foreach ($results as $result) {
-            $csv->insertOne([$result->id, $result->student_id, $result->course_id, $result->mark]);
-        }
-
-        $csv->output('results.csv');
+        ExportResults::dispatch();
+        return redirect()->route('result.index')->with('success','Exporting started!');
     }
-
 
     /**
      * Remove the specified resource from storage.

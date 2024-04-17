@@ -11,5 +11,8 @@ interface StudentRepositoryInterface extends BaseRepositoryInterface
     public function deleteStudent($id);
     public function search ($request);
     public function updateAvatar($studentId, $avatar);
+    public function getAllWithAverageScoreLessThanFive($chunkSize, $offset);
+
+
 }
 

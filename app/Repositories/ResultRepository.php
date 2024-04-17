@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories;
 use App\Enums\Base;
+use App\Models\Course;
 use App\Models\Result;
 use App\Repositories\Interfaces\ResultRepositoryInterface;
 
@@ -37,5 +38,8 @@ class ResultRepository extends BaseRepository implements ResultRepositoryInterfa
             }
         }
         return true;
+    }
+    public function checkExistedCourse($record){
+        return Course::where('id', $record)->exists();
     }
 }
