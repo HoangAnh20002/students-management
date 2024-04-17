@@ -39,15 +39,17 @@ class StudentController extends Controller
 
         if ($request->isNotFilled('result_from', 'result_to', 'age_from', 'age_to')) {
             $students = $this->studentRepository->getWithRelationship(Base::PAGE);
+            foreach ($students as $student) {
+                $student->average_score = $this->studentRepository->calculateAverageScore($student);
+            }
         } else {
             $students = $this->studentRepository->search($request);
             if ($students->isEmpty()) {
                 $error = 'Student not found';
             }
-        }
-
-        foreach ($students as $student) {
-            $student->average_score = $this->studentRepository->calculateAverageScore($student);
+            $students->each(function ($student) {
+                $student->average_score = $student->average_score ?? 'N/A';
+            });
         }
 
         return view('student.index', compact('students', 'course_sum', 'error', 'departments', 'courses'));

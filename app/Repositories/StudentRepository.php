@@ -7,7 +7,9 @@ use App\Models\Result;
 use App\Models\User;
 use App\Repositories\Interfaces\StudentRepositoryInterface;
 use App\Models\Student;
+use Couchbase\DesignDocument;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
@@ -23,9 +25,19 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
     }
     public function getWithRelationship($page)
     {
-        return $this->model->latest('id')->with(['user', 'course', 'department','result'])->paginate(Base::PAGE);
+        return $this->model->latest('id')->with([
+            'user' => function ($query) {
+                $query->select('id', 'full_name', 'email');
+            },
+            'course' => function($query){
+            $query->select('name');
+            },
+            'department',
+            'result' => function ($query) {
+                $query->select('student_id', 'course_id', 'mark');
+            }
+        ])->paginate(Base::PAGE);
     }
-
     public function createWithUser(array $data)
     {
         $department = Department::findOrFail($data['department_id']);
@@ -121,51 +133,35 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
         $resultTo = $request->query('result_to');
         $ageFrom = $request->query('age_from');
         $ageTo = $request->query('age_to');
-        $students = $this->model->with('course.result')->paginate(Base::PAGE);
-        $filteredStudents = $students->filter(function ($student) use ($resultFrom, $resultTo, $ageFrom, $ageTo) {
-            $totalMarks = 0;
-            $totalCourses = $student->course->count();
-            foreach ($student->result as $result) {
-                if ($result) {
-                    $totalMarks += $result->mark;
-                }
-            }
-            $averageScore = $totalCourses > 0 ? $totalMarks / $totalCourses : 0;
-            if($ageFrom !== null && $ageTo === null){
-                return $student->date_of_birth <= now()->subYears($ageFrom);
-            }
-            if($resultFrom !== null && $resultTo === null){
-                return $averageScore >= $resultFrom;
-            }
-            $errors = [];
-            if ($resultFrom > $resultTo) {
-                $errors[] = 'The result to must be greater than or equal to the result from.';
-            }
-            if ($ageFrom > $ageTo) {
-                $errors[] = 'The age to must be greater than or equal to the age from.';
-            }
-            if (!empty($errors)) {
-                return redirect()->route('student.index')->with('error', $errors);
-            }
-            if($resultTo == null && $resultFrom == null){
-                return  $student->date_of_birth >= now()->subYears($ageTo) &&
-                    $student->date_of_birth <= now()->subYears($ageFrom);
-            }
-            elseif($ageFrom == null && $ageTo == null){
-                return $averageScore >= $resultFrom && $averageScore <= $resultTo;
-            }
-            return $averageScore >= $resultFrom && $averageScore <= $resultTo &&
-                $student->date_of_birth >= now()->subYears($ageTo) &&
-                $student->date_of_birth <= now()->subYears($ageFrom);
-        });
 
-            $perPage = Base::PAGE;
-            $currentPage = LengthAwarePaginator::resolveCurrentPage();
-            $pagedData = $filteredStudents->slice(($currentPage - 1) * $perPage, $perPage)->all();
-            $students = new LengthAwarePaginator($pagedData, count($filteredStudents), $perPage, $currentPage);
-            return $students;
+        $query = $this->model->query()->with(['course', 'result', 'department', 'course']);
 
+        if ($ageFrom !== null && $ageTo === null) {
+            $query->whereDate('date_of_birth', '<=', now()->subYears($ageFrom)->format('Y-m-d'));
+        } elseif ($ageFrom === null && $ageTo !== null) {
+            $query->whereDate('date_of_birth', '>=', now()->subYears($ageTo)->format('Y-m-d'));
+        } elseif ($ageFrom !== null && $ageTo !== null) {
+            $query->whereDate('date_of_birth', '<=', now()->subYears($ageFrom)->format('Y-m-d'))
+                ->whereDate('date_of_birth', '>=', now()->subYears($ageTo)->format('Y-m-d'));
+        }
+
+        $query->leftJoin('results', 'results.student_id', '=', 'students.id')
+            ->selectRaw('students.id, students.user_id, students.student_code, students.image, students.date_of_birth, AVG(results.mark) as average_score')
+            ->groupBy('students.id');
+
+        if ($resultFrom !== null && $resultTo === null) {
+            $query->having('average_score', '>=', $resultFrom);
+        } elseif ($resultFrom === null && $resultTo !== null) {
+            $query->having('average_score', '<=', $resultTo);
+        } elseif ($resultFrom !== null && $resultTo !== null) {
+            $query->havingBetween('average_score', [$resultFrom, $resultTo]);
+        }
+
+        $students = $query->paginate(Base::PAGE);
+
+        return $students;
     }
+
     public function updateAvatar($studentId, $avatar)
     {
         $student = $this->model->findOrFail($studentId);
@@ -177,4 +173,24 @@ class StudentRepository extends BaseRepository implements StudentRepositoryInter
             $student->save();
         }
     }
+    public function getAllWithAverageScoreLessThanFive($chunkSize, $offset)
+    {
+        return $this->model->query()
+            ->with(['course', 'result', 'department', 'course'])
+            ->leftJoin('results', 'results.student_id', '=', 'students.id')
+            ->selectRaw('
+            students.id,
+            students.user_id,
+            students.student_code,
+            students.image,
+            students.date_of_birth,
+            AVG(results.mark) as average_score
+        ')
+            ->groupBy('students.id')
+            ->havingRaw('average_score < ?', [5])
+            ->skip($offset)
+            ->take($chunkSize)
+            ->get();
+    }
+
 }

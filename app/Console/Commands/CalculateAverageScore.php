@@ -2,7 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\Base;
 use App\Jobs\SendDropOutNotification;
+use App\Models\Student;
 use Illuminate\Console\Command;
 use App\Repositories\StudentRepository;
 
@@ -35,14 +37,25 @@ class CalculateAverageScore extends Command
     }
     public function handle()
     {
-        $students = $this->studentRepository->all();
-        foreach ($students as $student) {
-            $student->average_score = $this->studentRepository->calculateAverageScore($student);
-            $this->info('Average score for student ' . $student->id . ': ' . $student->average_score);
-            if ($student->average_score < 5) {
-                SendDropOutNotification::dispatch($student);
-                $this->info('Drop out notification sent to ' . $student->user->email);
-            }
-        }
+        $chunkSize = 1000;
+        Student::query()
+            ->with(['course', 'result', 'department', 'course'])
+            ->leftJoin('results', 'results.student_id', '=', 'students.id')
+            ->selectRaw('
+            students.id,
+            students.user_id,
+            students.student_code,
+            students.image,
+            students.date_of_birth,
+            AVG(results.mark) as average_score
+        ')
+            ->groupBy('students.id')
+            ->havingRaw('average_score < ?', [5])
+            ->chunk($chunkSize, function ($students) {
+                foreach ($students as $student) {
+                    SendDropOutNotification::dispatch($student);
+                }
+            });
     }
+
 }

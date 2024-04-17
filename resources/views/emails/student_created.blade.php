@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Information Email</title>
     <style>
         body, h1, h2, h3, h4, h5, h6, p, ul, li {
             margin: 0;

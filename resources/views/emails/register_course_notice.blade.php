@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Notification</title>
-    <style>
+ <style>
         .container {
             max-width: 600px;
             margin: 0 auto;
@@ -46,7 +40,6 @@
             color: #666;
         }
     </style>
-</head>
 <body>
 <div class="container">
     <div class="head">
@@ -74,4 +67,3 @@
     </div>
 </div>
 </body>
-</html>
